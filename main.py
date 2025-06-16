@@ -11,7 +11,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 # Async start handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [InlineKeyboardButton("🌐 Open App", web_app=WebAppInfo(url="https://qerion-web.onrender.com"))],
+        [InlineKeyboardButton("🌐 Open App", web_app=WebAppInfo(url="https://quantumanimus.onrender.com"))],
         [InlineKeyboardButton("👥 Join Community", url="https://t.me/QuantumAnimus_Official")]
     ]
     markup = InlineKeyboardMarkup(keyboard)
