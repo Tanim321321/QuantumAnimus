@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Animus</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0a0a0a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+    }
+
+    header {
+      font-size: 24px;
+      padding: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .main-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .button {
+      background: linear-gradient(145deg, #1f1f1f, #303030);
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: 0.3s;
+      width: 250px;
+    }
+
+    .button:hover {
+      background: linear-gradient(145deg, #3a3a3a, #4a4a4a);
+    }
+
+    .bottom-nav {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background-color: #121212;
+      border-top: 1px solid #222;
+    }
+
+    .nav-button {
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>Quantum Animus</header>
+  <div class="main-buttons">
+    <button class="button">Claim</button>
+    <button class="button">Tasks</button>
+    <button class="button">Referral</button>
+    <button class="button">Upgrade</button>
+    <button class="button">Wallet</button>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-button">Home</div>
+    <div class="nav-button">Profile</div>
+    <div class="nav-button">Settings</div>
+  </div>
+</body>
+</html>
