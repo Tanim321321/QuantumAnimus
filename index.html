@@ -488,33 +488,32 @@
             showAlert(`Successfully claimed ${levelRewards[userData.level]} points!`, 'success');
         }
         
-        // Timer function (FIXED)
-        function startTimer() {
-            const timerElement = document.getElementById('timer');
-            const claimBtn = document.getElementById('claimBtn');
-            
-            // Clear any existing timer
-            if(window.timerInterval) {
-                clearInterval(window.timerInterval);
-            }
-            
-            // Immediate update function
-            const updateTimer = () => {
-                const currentTime = Math.floor(Date.now() / 1000);
-                const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
-                const remainingTime = Math.max(0, 10800 - timeDiff);
-                
-                if(remainingTime <= 0) {
-                    timerElement.textContent = 'Ready to claim!';
-                    claimBtn.disabled = false;
-                    clearInterval(window.timerInterval);
-                } else {
-                    const hours = Math.floor(remainingTime / 3600);
-                    const minutes = Math.floor((remainingTime % 3600) / 60);
-                    const seconds = remainingTime % 60;
-                    timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-            };
+        // function startTimer() {
+  // পুরানো টাইমার বন্ধ করি
+  if(window.timerInterval) clearInterval(window.timerInterval);
+  
+  // নতুন টাইমার শুরু
+  window.timerInterval = setInterval(() => {
+    const now = Math.floor(Date.now() / 1000);
+    const lastTime = userData.lastClaim || 0;
+    const diff = now - lastTime;
+    const timeLeft = 10800 - diff; // ৩ ঘণ্টা = ১০৮০০ সেকেন্ড
+    
+    if(timeLeft <= 0) {
+      document.getElementById('timer').textContent = "ক্লেইম করতে প্রস্তুত!";
+      return;
+    }
+    
+    // সময় ক্যালকুলেশন
+    const hours = Math.floor(timeLeft / 3600);
+    const minutes = Math.floor((timeLeft % 3600) / 60);
+    const seconds = timeLeft % 60;
+    
+    // সময় শো করানো
+    const timeStr = `${hours} ঘণ্টা ${minutes} মিনিট ${seconds} সেকেন্ড`;
+    document.getElementById('timer').textContent = `পরবর্তী ক্লেইম: ${timeStr}`;
+  }, 1000); // প্রতি সেকেন্ডে আপডেট
+};
             
             // Run immediately
             updateTimer();
