@@ -3,18 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Crypto Mining</title>
+    <title>Crypto Mining Bot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --base-bg: #0f172a;
-            --primary: #10b981;
-            --secondary: #3b82f6;
-            --accent: #8b5cf6;
-            --glass: rgba(30, 41, 59, 0.7);
-        }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
@@ -30,7 +21,7 @@
             min-height: calc(100vh - 70px);
         }
         
-        /* Premium Navigation Bar (Bottom) */
+        /* Navigation Bar (Bottom) */
         .nav-container {
             position: fixed;
             bottom: 0;
@@ -38,7 +29,7 @@
             right: 0;
             z-index: 1000;
             padding: 10px;
-            background: var(--glass);
+            background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
@@ -69,24 +60,20 @@
         }
         
         .nav-btn.active {
-            color: var(--primary);
+            color: #10b981;
         }
         
-        /* Premium Claim Button */
+        /* Claim Button */
         #claimBtn {
-            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             border: none;
             font-weight: bold;
             padding: 18px 30px;
             font-size: 1.2rem;
             border-radius: 16px;
             margin: 25px 0 15px;
-            box-shadow: 
-                0 8px 20px rgba(59, 130, 246, 0.4),
-                0 0 0 2px rgba(255, 255, 255, 0.1) inset;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
         }
         
         #claimBtn:disabled {
@@ -94,35 +81,7 @@
             box-shadow: none;
         }
         
-        #claimBtn:not(:disabled):hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 
-                0 12px 25px rgba(59, 130, 246, 0.6),
-                0 0 0 2px rgba(255, 255, 255, 0.2) inset;
-        }
-        
-        #claimBtn:after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to right, 
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: rotate(30deg);
-            transition: all 0.6s;
-        }
-        
-        #claimBtn:hover:after {
-            left: 100%;
-        }
-        
-        /* Premium Timer Box */
+        /* Timer Box */
         #timer {
             font-size: 1.3rem;
             font-weight: bold;
@@ -132,46 +91,15 @@
             margin: 15px auto;
             display: inline-block;
             border: 1px solid rgba(56, 189, 248, 0.3);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
-        /* Premium Cards */
+        /* Cards */
         .status-card {
-            background: var(--glass);
+            background: rgba(30, 41, 59, 0.7);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .upgrade-card {
-            background: var(--glass);
-            border-radius: 16px;
-            padding: 18px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-        
-        .upgrade-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(56, 189, 248, 0.5);
-        }
-        
-        .referral-box {
-            background: var(--glass);
-            padding: 18px;
-            border-radius: 16px;
-            margin: 20px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Premium Typography */
-        h1, h2, h3, h4 {
-            font-weight: 600;
         }
         
         .points-display {
@@ -200,35 +128,7 @@
         .stat-value {
             font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary);
-        }
-        
-        /* Progress Bar */
-        .progress {
-            height: 12px;
-            margin: 12px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: visible;
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, var(--secondary), var(--accent));
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
-        
-        /* Alert */
-        .floating-alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: none;
-            backdrop-filter: blur(10px);
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #10b981;
         }
     </style>
 </head>
@@ -262,97 +162,7 @@
         </div>
     </div>
     
-    <!-- Task Page -->
-    <div id="task" class="page">
-        <div class="container py-3">
-            <h1 class="text-center mb-4">✅ Daily Tasks</h1>
-            
-            <div class="upgrade-card">
-                <h4><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
-                <p>Get 200 points</p>
-                <button class="btn btn-sm btn-primary">Complete Task</button>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fab fa-telegram me-2"></i>Join Telegram</h4>
-                <p>Get 300 points</p>
-                <button class="btn btn-sm btn-primary">Complete Task</button>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-share-alt me-2"></i>Share Bot</h4>
-                <p>Get 500 points</p>
-                <button class="btn btn-sm btn-primary">Complete Task</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Referral Page -->
-    <div id="referral" class="page">
-        <div class="container py-3">
-            <h1 class="text-center mb-4">👥 Referral Program</h1>
-            
-            <div class="referral-box">
-                <h4 class="text-center mb-3"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
-                <div class="input-group mb-3">
-                    <input type="text" id="referralLink" class="form-control" value="https://t.me/YourBot?ref=12345" readonly>
-                    <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
-                </div>
-                <p class="text-center">Earn 10% of your referrals' earnings!</p>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Referral Stats</h4>
-                <p>Total Referrals: <strong>0</strong></p>
-                <p>Earned from Referrals: <strong>0</strong> points</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Upgrade Page -->
-    <div id="upgrade" class="page">
-        <div class="container py-3">
-            <h1 class="text-center mb-4">⬆️ Upgrade Level</h1>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
-                <div class="progress">
-                    <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
-                </div>
-                <p>Points to next level: <span id="pointsToNext">5000</span></p>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
-                <p>Cost: 5,000 points</p>
-                <p>Reward: 125 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
-                <p>Cost: 8,000 points</p>
-                <p>Reward: 150 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
-                <p>Cost: 12,000 points</p>
-                <p>Reward: 175 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
-            </div>
-            
-            <div class="upgrade-card">
-                <h4><i class="fas fa-crown me-2"></i>Level 3 → God Level</h4>
-                <p>Cost: 15,000 points</p>
-                <p>Reward: 200 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Premium Navigation Bar (Bottom) -->
+    <!-- Navigation Bar (Bottom) -->
     <div class="nav-container">
         <div class="row text-center">
             <div class="col-3">
@@ -381,16 +191,11 @@
             </div>
         </div>
     </div>
-    
-    <!-- Alert Notification -->
-    <div id="alertBox" class="floating-alert alert alert-success alert-dismissible fade show" role="alert">
-        <span id="alertMessage">Operation successful!</span>
-        <button type="button" class="btn-close" onclick="hideAlert()"></button>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
-        // User data with localStorage
+        // User data
         let userData = JSON.parse(localStorage.getItem('userData')) || {
             points: 0,
             level: 0,
@@ -398,65 +203,40 @@
             miningSpeed: 100
         };
         
-        // Level costs
-        const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
-        
         // Level rewards
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
         
-        // Initialize on page load
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             showPage('home');
             updateUI();
             startTimer();
         });
         
-        // Show page function
+        // Show page
         function showPage(pageId) {
-            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.style.display = 'none';
             });
-            
-            // Show selected page
             document.getElementById(pageId).style.display = 'block';
             
-            // Update nav button active state
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
-            
-            // Update UI
-            updateUI();
         }
         
-        // Update UI elements
+        // Update UI
         function updateUI() {
-            // Update points and level
             document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
-            document.querySelectorAll('#currentLevel, #currentLevel2').forEach(el => {
-                el.textContent = userData.level;
-            });
-            
-            // Update mining speed
+            document.getElementById('currentLevel').textContent = userData.level;
             document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
             
-            // Update progress bar
-            const nextLevel = userData.level + 1;
-            if(nextLevel <= 4) {
-                const neededPoints = levelCosts[nextLevel];
-                const progress = Math.min(100, (userData.points / neededPoints) * 100);
-                document.getElementById('levelProgress').style.width = `${progress}%`;
-                document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
-            }
-            
-            // Update claim button state
             const claimBtn = document.getElementById('claimBtn');
             const currentTime = Math.floor(Date.now() / 1000);
             const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
             
-            if(userData.lastClaim === 0 || timeDiff >= 10800) {
+            if(timeDiff >= 10800) {
                 claimBtn.disabled = false;
                 claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[userData.level]} POINTS`;
             } else {
@@ -464,116 +244,61 @@
             }
         }
         
-        // Claim points function
-        function claimPoints() {
-            const currentTime = Math.floor(Date.now() / 1000);
-            
-            // Check 3-hour cooldown
-            if(userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
-                showAlert('Please wait until the timer completes!', 'warning');
-                return;
-            }
-            
-            // Add points
-            userData.points += levelRewards[userData.level];
-            userData.lastClaim = currentTime;
-            
-            // Save data
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            // Update UI
-            updateUI();
-            startTimer();
-            
-            showAlert(`Successfully claimed ${levelRewards[userData.level]} points!`, 'success');
-        }
-        
-        // Timer function (FIXED)
+        // New Improved Timer Function
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
-            // Clear any existing timer
+            // Clear existing timer
             if(window.timerInterval) {
                 clearInterval(window.timerInterval);
             }
             
-            // Immediate update function
+            // Update timer immediately
             const updateTimer = () => {
-                const currentTime = Math.floor(Date.now() / 1000);
-                const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
-                const remainingTime = Math.max(0, 10800 - timeDiff);
+                const now = Math.floor(Date.now() / 1000);
+                const lastClaimTime = userData.lastClaim || 0;
+                const elapsed = now - lastClaimTime;
+                const remaining = Math.max(0, 10800 - elapsed);
                 
-                if(remainingTime <= 0) {
-                    timerElement.textContent = 'Ready to claim!';
+                if(remaining <= 0) {
+                    timerElement.textContent = "Ready to claim!";
                     claimBtn.disabled = false;
                     clearInterval(window.timerInterval);
-                } else {
-                    const hours = Math.floor(remainingTime / 3600);
-                    const minutes = Math.floor((remainingTime % 3600) / 60);
-                    const seconds = remainingTime % 60;
-                    timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    return;
                 }
+                
+                const hours = Math.floor(remaining / 3600);
+                const minutes = Math.floor((remaining % 3600) / 60);
+                const seconds = remaining % 60;
+                
+                timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             };
             
             // Run immediately
             updateTimer();
             
-            // Set interval for updates
+            // Update every second
             window.timerInterval = setInterval(updateTimer, 1000);
         }
         
-        // Upgrade level function
-        function upgradeLevel(targetLevel) {
-            const cost = levelCosts[targetLevel];
+        // Claim points
+        function claimPoints() {
+            const currentTime = Math.floor(Date.now() / 1000);
             
-            // Check level requirement
-            if(userData.level !== targetLevel - 1) {
-                showAlert(`You need to be at level ${targetLevel - 1} to upgrade!`, 'warning');
+            if(userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
+                alert('Please wait until timer completes!');
                 return;
             }
             
-            // Check points
-            if(userData.points < cost) {
-                showAlert(`You need ${(cost - userData.points).toLocaleString()} more points!`, 'danger');
-                return;
-            }
-            
-            // Upgrade
-            userData.points -= cost;
-            userData.level = targetLevel;
-            
-            // Save data
+            userData.points += levelRewards[userData.level];
+            userData.lastClaim = currentTime;
             localStorage.setItem('userData', JSON.stringify(userData));
             
-            // Update UI
             updateUI();
+            startTimer(); // Restart timer after claim
             
-            showAlert(`Upgraded to level ${targetLevel}! Mining speed increased.`, 'success');
-        }
-        
-        // Copy referral link
-        function copyReferralLink() {
-            const linkInput = document.getElementById('referralLink');
-            linkInput.select();
-            document.execCommand('copy');
-            showAlert('Referral link copied to clipboard!', 'info');
-        }
-        
-        // Alert functions
-        function showAlert(message, type) {
-            const alertBox = document.getElementById('alertBox');
-            const alertMessage = document.getElementById('alertMessage');
-            
-            alertBox.className = `floating-alert alert alert-${type} alert-dismissible fade show`;
-            alertMessage.textContent = message;
-            alertBox.style.display = 'block';
-            
-            setTimeout(hideAlert, 3000);
-        }
-        
-        function hideAlert() {
-            document.getElementById('alertBox').style.display = 'none';
+            alert(`Claimed ${levelRewards[userData.level]} points!`);
         }
     </script>
 </body>
