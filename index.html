@@ -404,15 +404,6 @@
         // Level rewards
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
         
-        // Background images
-        const bgImages = {
-            0: 'background-level0.jpg',
-            1: 'background-level1.jpg',
-            2: 'background-level2.jpg',
-            3: 'background-level3.jpg',
-            4: 'background-level4.jpg'
-        };
-        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             showPage('home');
@@ -463,7 +454,7 @@
             // Update claim button state
             const claimBtn = document.getElementById('claimBtn');
             const currentTime = Math.floor(Date.now() / 1000);
-            const timeDiff = currentTime - userData.lastClaim;
+            const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
             
             if(userData.lastClaim === 0 || timeDiff >= 10800) {
                 claimBtn.disabled = false;
@@ -497,33 +488,39 @@
             showAlert(`Successfully claimed ${levelRewards[userData.level]} points!`, 'success');
         }
         
-        // Timer function
+        // Timer function (FIXED)
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
             // Clear any existing timer
-            if(window.timerInterval) clearInterval(window.timerInterval);
+            if(window.timerInterval) {
+                clearInterval(window.timerInterval);
+            }
             
-            window.timerInterval = setInterval(() => {
+            // Immediate update function
+            const updateTimer = () => {
                 const currentTime = Math.floor(Date.now() / 1000);
-                const timeDiff = currentTime - userData.lastClaim;
-                const remainingTime = 10800 - timeDiff;
+                const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
+                const remainingTime = Math.max(0, 10800 - timeDiff);
                 
                 if(remainingTime <= 0) {
-                    clearInterval(window.timerInterval);
                     timerElement.textContent = 'Ready to claim!';
                     claimBtn.disabled = false;
-                    return;
+                    clearInterval(window.timerInterval);
+                } else {
+                    const hours = Math.floor(remainingTime / 3600);
+                    const minutes = Math.floor((remainingTime % 3600) / 60);
+                    const seconds = remainingTime % 60;
+                    timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 }
-                
-                // Format time
-                const hours = Math.floor(remainingTime / 3600);
-                const minutes = Math.floor((remainingTime % 3600) / 60);
-                const seconds = remainingTime % 60;
-                
-                timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
+            };
+            
+            // Run immediately
+            updateTimer();
+            
+            // Set interval for updates
+            window.timerInterval = setInterval(updateTimer, 1000);
         }
         
         // Upgrade level function
