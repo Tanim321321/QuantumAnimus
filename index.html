@@ -3,216 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Mining Bot</title>
+    <title>Premium Crypto Mining</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --base-bg: #0f172a;
+            --primary: #10b981;
+            --secondary: #3b82f6;
+            --accent: #8b5cf6;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             min-height: 100vh;
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             background-attachment: fixed;
-            transition: background-image 0.5s ease;
+            padding-bottom: 70px;
         }
+        
         .page {
             display: none;
             padding: 15px;
-            min-height: calc(100vh - 60px);
+            min-height: calc(100vh - 70px);
         }
+        
+        /* Premium Navigation Bar (Bottom) */
+        .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
         .nav-btn {
-            background: rgba(0, 0, 0, 0.8);
+            background: transparent;
             border: none;
-            border-radius: 8px;
-            color: white;
-            padding: 8px 5px;
-            margin: 2px;
+            color: #cbd5e1;
+            padding: 12px 5px;
+            margin: 0 2px;
             width: 100%;
             transition: all 0.3s;
-            font-size: 0.8rem;
-            white-space: nowrap;
+            font-size: 0.75rem;
+            border-radius: 12px;
         }
+        
+        .nav-btn i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
         .nav-btn:hover, .nav-btn.active {
-            background: rgba(50, 50, 150, 0.9);
-            transform: translateY(-2px);
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            transform: translateY(-5px);
         }
+        
+        .nav-btn.active {
+            color: var(--primary);
+        }
+        
+        /* Premium Claim Button */
         #claimBtn {
-            background: linear-gradient(45deg, #FF512F, #F09819);
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
             border: none;
             font-weight: bold;
-            padding: 12px 20px;
-            font-size: 1rem;
-            border-radius: 50px;
-            margin: 15px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            padding: 18px 30px;
+            font-size: 1.2rem;
+            border-radius: 16px;
+            margin: 25px 0 15px;
+            box-shadow: 
+                0 8px 20px rgba(59, 130, 246, 0.4),
+                0 0 0 2px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
+        
         #claimBtn:disabled {
-            background: #6c757d;
+            background: #475569;
             box-shadow: none;
         }
+        
+        #claimBtn:not(:disabled):hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 
+                0 12px 25px rgba(59, 130, 246, 0.6),
+                0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+        }
+        
+        #claimBtn:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        
+        #claimBtn:hover:after {
+            left: 100%;
+        }
+        
+        /* Premium Timer Box */
         #timer {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 15px;
-            border-radius: 8px;
-            margin: 10px auto;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 12px 25px;
+            border-radius: 12px;
+            margin: 15px auto;
             display: inline-block;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        .upgrade-card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        
+        /* Premium Cards */
         .status-card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            background: var(--glass);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
-        .task-btn {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-top: 8px;
-            font-size: 0.9rem;
+        
+        .upgrade-card {
+            background: var(--glass);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
         }
-        .progress {
-            height: 18px;
-            margin: 8px 0;
-            background: rgba(255, 255, 255, 0.2);
+        
+        .upgrade-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.5);
         }
+        
         .referral-box {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 12px;
-            border-radius: 10px;
-            margin: 12px 0;
+            background: var(--glass);
+            padding: 18px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
+        
+        /* Premium Typography */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+        }
+        
+        .points-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .stat-box {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            width: 45%;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 12px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: visible;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Alert */
         .floating-alert {
             position: fixed;
-            top: 60px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
             display: none;
+            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
         }
     </style>
 </head>
 <body>
-    <nav class="container-fluid py-1" style="background: rgba(0, 0, 0, 0.9); position: sticky; top: 0; z-index: 100;">
-        <div class="row text-center">
-            <div class="col-3 p-1">
-                <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
-            </div>
-            <div class="col-3 p-1">
-                <button class="nav-btn" onclick="showPage('task')">✅ Task</button>
-            </div>
-            <div class="col-3 p-1">
-                <button class="nav-btn" onclick="showPage('referral')">👥 Refferal</button>
-            </div>
-            <div class="col-3 p-1">
-                <button class="nav-btn" onclick="showPage('upgrade')">⬆️ Upgrade</button>
-            </div>
-        </div>
-    </nav>
-    
-    <div id="alertBox" class="floating-alert alert alert-success alert-dismissible fade show" role="alert">
-        <span id="alertMessage">Operation successful!</span>
-        <button type="button" class="btn-close" onclick="hideAlert()"></button>
-    </div>
-    
+    <!-- Home Page -->
     <div id="home" class="page">
-        <div class="container text-center py-2">
+        <div class="container text-center py-3">
             <div class="status-card">
-                <h1 class="h4">🛠️ Crypto Mining Bot</h1>
-                <p>Level: <span id="currentLevel">0</span> | Mining: <span id="miningSpeed">100</span> coins/3h</p>
-                <div class="my-2">
-                    <h2 id="pointsDisplay">0</h2>
-                    <p>Points</p>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div>Level</div>
+                        <div class="stat-value" id="currentLevel">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div>Mining</div>
+                        <div class="stat-value" id="miningSpeed">100</div>
+                        <div>coins/3h</div>
+                    </div>
                 </div>
-                <button id="claimBtn" class="btn" onclick="claimPoints()">Claim 100 Points</button>
-                <div id="timer" class="mt-2">Next claim in: 03:00:00</div>
+                
+                <h3 class="mb-3">YOUR BALANCE</h3>
+                <div class="points-display" id="pointsDisplay">0</div>
+                <p>Total Points</p>
+                
+                <button id="claimBtn" class="btn" onclick="claimPoints()">
+                    <i class="fas fa-gem me-2"></i>CLAIM POINTS
+                </button>
+                
+                <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
             </div>
         </div>
     </div>
     
+    <!-- Task Page -->
     <div id="task" class="page">
-        <div class="container py-2">
-            <h1 class="h5 text-center mb-3">✅ Daily Tasks</h1>
+        <div class="container py-3">
+            <h1 class="text-center mb-4">✅ Daily Tasks</h1>
+            
             <div class="upgrade-card">
-                <h4 class="h6">📱 Follow on Twitter</h4>
+                <h4><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
                 <p>Get 200 points</p>
-                <button class="btn task-btn">Complete</button>
+                <button class="btn btn-sm btn-primary">Complete Task</button>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">📢 Join Telegram</h4>
+                <h4><i class="fab fa-telegram me-2"></i>Join Telegram</h4>
                 <p>Get 300 points</p>
-                <button class="btn task-btn">Complete</button>
+                <button class="btn btn-sm btn-primary">Complete Task</button>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">📤 Share Bot</h4>
+                <h4><i class="fas fa-share-alt me-2"></i>Share Bot</h4>
                 <p>Get 500 points</p>
-                <button class="btn task-btn">Complete</button>
+                <button class="btn btn-sm btn-primary">Complete Task</button>
             </div>
         </div>
     </div>
     
+    <!-- Referral Page -->
     <div id="referral" class="page">
-        <div class="container py-2">
-            <h1 class="h5 text-center mb-3">👥 Referral Program</h1>
+        <div class="container py-3">
+            <h1 class="text-center mb-4">👥 Referral Program</h1>
+            
             <div class="referral-box">
-                <h4 class="h6 text-center">🔗 Your Referral Link</h4>
-                <div class="input-group input-group-sm mb-2">
-                    <input type="text" id="referralLink" class="form-control form-control-sm" value="https://t.me/YourBot?ref=12345" readonly>
-                    <button class="btn btn-sm btn-success" onclick="copyReferralLink()">Copy</button>
+                <h4 class="text-center mb-3"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
+                <div class="input-group mb-3">
+                    <input type="text" id="referralLink" class="form-control" value="https://t.me/YourBot?ref=12345" readonly>
+                    <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
                 </div>
-                <p class="text-center small">Earn 10% of referrals' earnings!</p>
+                <p class="text-center">Earn 10% of your referrals' earnings!</p>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6 text-center">📊 Your Stats</h4>
-                <p>Referrals: <strong>0</strong></p>
-                <p>Earned: <strong>0</strong> points</p>
+                <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Referral Stats</h4>
+                <p>Total Referrals: <strong>0</strong></p>
+                <p>Earned from Referrals: <strong>0</strong> points</p>
             </div>
         </div>
     </div>
     
+    <!-- Upgrade Page -->
     <div id="upgrade" class="page">
-        <div class="container py-2">
-            <h1 class="h5 text-center mb-3">⬆️ Upgrade Level</h1>
+        <div class="container py-3">
+            <h1 class="text-center mb-4">⬆️ Upgrade Level</h1>
+            
             <div class="upgrade-card">
-                <h4 class="h6">Current Level: <span id="currentLevel2">0</span></h4>
+                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
                 <div class="progress">
                     <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
                 </div>
-                <p class="small">To next level: <span id="pointsToNext">5000</span></p>
+                <p>Points to next level: <span id="pointsToNext">5000</span></p>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">⚡ Level 0 → 1</h4>
+                <h4><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
                 <p>Cost: 5,000 points</p>
-                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
+                <p>Reward: 125 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">⚡ Level 1 → 2</h4>
+                <h4><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
                 <p>Cost: 8,000 points</p>
-                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
+                <p>Reward: 150 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">⚡ Level 2 → 3</h4>
+                <h4><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
                 <p>Cost: 12,000 points</p>
-                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
+                <p>Reward: 175 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
             </div>
+            
             <div class="upgrade-card">
-                <h4 class="h6">💎 Level 3 → GOD</h4>
+                <h4><i class="fas fa-crown me-2"></i>Level 3 → God Level</h4>
                 <p>Cost: 15,000 points</p>
-                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
+                <p>Reward: 200 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
             </div>
         </div>
     </div>
 
+    <!-- Premium Navigation Bar (Bottom) -->
+    <div class="nav-container">
+        <div class="row text-center">
+            <div class="col-3">
+                <button class="nav-btn active" onclick="showPage('home')">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('task')">
+                    <i class="fas fa-tasks"></i>
+                    <span>Task</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('referral')">
+                    <i class="fas fa-users"></i>
+                    <span>Referral</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('upgrade')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Upgrade</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alert Notification -->
+    <div id="alertBox" class="floating-alert alert alert-success alert-dismissible fade show" role="alert">
+        <span id="alertMessage">Operation successful!</span>
+        <button type="button" class="btn-close" onclick="hideAlert()"></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // User data with localStorage
         let userData = JSON.parse(localStorage.getItem('userData')) || {
             points: 0,
             level: 0,
@@ -220,8 +398,13 @@
             miningSpeed: 100
         };
         
+        // Level costs
         const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
+        
+        // Level rewards
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
+        
+        // Background images
         const bgImages = {
             0: 'background-level0.jpg',
             1: 'background-level1.jpg',
@@ -230,38 +413,45 @@
             4: 'background-level4.jpg'
         };
         
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             showPage('home');
             updateUI();
             startTimer();
         });
         
+        // Show page function
         function showPage(pageId) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.style.display = 'none';
             });
+            
+            // Show selected page
             document.getElementById(pageId).style.display = 'block';
             
-            if(pageId === 'home') {
-                document.body.style.backgroundImage = `url('${bgImages[userData.level]}')`;
-            } else {
-                document.body.style.backgroundImage = "url('background-general.jpg')";
-            }
-            
+            // Update nav button active state
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Update UI
             updateUI();
         }
         
+        // Update UI elements
         function updateUI() {
+            // Update points and level
             document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
             document.querySelectorAll('#currentLevel, #currentLevel2').forEach(el => {
                 el.textContent = userData.level;
             });
+            
+            // Update mining speed
             document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
             
+            // Update progress bar
             const nextLevel = userData.level + 1;
             if(nextLevel <= 4) {
                 const neededPoints = levelCosts[nextLevel];
@@ -270,37 +460,49 @@
                 document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
             }
             
+            // Update claim button state
             const claimBtn = document.getElementById('claimBtn');
             const currentTime = Math.floor(Date.now() / 1000);
             const timeDiff = currentTime - userData.lastClaim;
             
             if(userData.lastClaim === 0 || timeDiff >= 10800) {
                 claimBtn.disabled = false;
-                claimBtn.textContent = `Claim ${levelRewards[userData.level]} Points`;
+                claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[userData.level]} POINTS`;
             } else {
                 claimBtn.disabled = true;
             }
         }
         
+        // Claim points function
         function claimPoints() {
             const currentTime = Math.floor(Date.now() / 1000);
+            
+            // Check 3-hour cooldown
             if(userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
                 showAlert('Please wait until the timer completes!', 'warning');
                 return;
             }
             
+            // Add points
             userData.points += levelRewards[userData.level];
             userData.lastClaim = currentTime;
+            
+            // Save data
             localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Update UI
             updateUI();
             startTimer();
+            
             showAlert(`Successfully claimed ${levelRewards[userData.level]} points!`, 'success');
         }
         
+        // Timer function
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
+            // Clear any existing timer
             if(window.timerInterval) clearInterval(window.timerInterval);
             
             window.timerInterval = setInterval(() => {
@@ -315,6 +517,7 @@
                     return;
                 }
                 
+                // Format time
                 const hours = Math.floor(remainingTime / 3600);
                 const minutes = Math.floor((remainingTime % 3600) / 60);
                 const seconds = remainingTime % 60;
@@ -323,27 +526,36 @@
             }, 1000);
         }
         
+        // Upgrade level function
         function upgradeLevel(targetLevel) {
             const cost = levelCosts[targetLevel];
             
+            // Check level requirement
             if(userData.level !== targetLevel - 1) {
                 showAlert(`You need to be at level ${targetLevel - 1} to upgrade!`, 'warning');
                 return;
             }
             
+            // Check points
             if(userData.points < cost) {
                 showAlert(`You need ${(cost - userData.points).toLocaleString()} more points!`, 'danger');
                 return;
             }
             
+            // Upgrade
             userData.points -= cost;
             userData.level = targetLevel;
-            document.body.style.backgroundImage = `url('${bgImages[targetLevel]}')`;
+            
+            // Save data
             localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Update UI
             updateUI();
+            
             showAlert(`Upgraded to level ${targetLevel}! Mining speed increased.`, 'success');
         }
         
+        // Copy referral link
         function copyReferralLink() {
             const linkInput = document.getElementById('referralLink');
             linkInput.select();
@@ -351,6 +563,7 @@
             showAlert('Referral link copied to clipboard!', 'info');
         }
         
+        // Alert functions
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertBox');
             const alertMessage = document.getElementById('alertMessage');
