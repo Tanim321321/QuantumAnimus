@@ -1,124 +1,65 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quantum Animus</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-image: url('background-level0.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: background-image 1s ease-in-out;
-    }
-    .container {
-      text-align: center;
-      padding: 20px;
-      color: white;
-    }
-    .button-container {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 10px 0;
-    }
-    button {
-      background: #1f1f1f;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #333;
-    }
-    .claim-box {
-      margin-top: 80px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Mining Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .dashboard-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .mining-btn {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            transition: all 0.3s;
+        }
+        .mining-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .transaction-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-  <div class="container" id="pageContent">
-    <div class="claim-box" id="claimBox">
-      <h2>Claim your points</h2>
-      <p id="claimMessage">Click below to earn points.</p>
-      <button onclick="claimPoints()">Claim</button>
-    </div>
-  </div>
+    <div class="container py-5">
+        <!-- হেডার -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">🛠️ Crypto Mining Bot</h1>
+            <p class="lead">মাইনিং করে পয়েন্ট জমা করুন এবং টোকেন রিডিম করুন!</p>
+        </div>
 
-  <div class="button-container">
-    <button onclick="switchPage('home')">Home</button>
-    <button onclick="switchPage('task')">Task</button>
-    <button onclick="switchPage('referral')">Referral</button>
-    <button onclick="switchPage('upgrade')">Upgrade</button>
-    <button onclick="switchPage('wallet')">Wallet</button>
-  </div>
+        <!-- ড্যাশবোর্ড কার্ড -->
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="dashboard-card bg-white">
+                    <h3 class="text-center mb-4">আপনার স্ট্যাটাস</h3>
+                    <div class="text-center">
+                        <h2 id="userPoints" class="display-3">0</h2>
+                        <p class="text-muted">পয়েন্ট</p>
+                    </div>
+                    
+                    <!-- মাইনিং বাটন -->
+                    <div class="d-grid gap-2 mt-4">
+                        <button id="miningBtn" class="btn mining-btn btn-lg text-white" onclick="toggleMining()">
+                            ▶️ মাইনিং শুরু করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <script>
-    let level = 0;
-    const claimValues = [100, 125, 150, 175, 200];
-    const upgradeCosts = [5000, 8000, 10000, 15000];
-    let coins = 0;
-    let lastClaimTime = 0;
-    const CLAIM_INTERVAL = 3 * 60 * 60 * 1000;
-
-    function claimPoints() {
-      const now = new Date().getTime();
-      if (now - lastClaimTime < CLAIM_INTERVAL) {
-        document.getElementById("claimMessage").innerText = "You need to wait before claiming again.";
-        return;
-      }
-      coins += claimValues[level];
-      lastClaimTime = now;
-      document.getElementById("claimMessage").innerText = `You earned ${claimValues[level]} points! Total: ${coins} points.`;
-    }
-
-    function upgradeLevel() {
-      if (level < 4 && coins >= upgradeCosts[level]) {
-        coins -= upgradeCosts[level];
-        level++;
-        changeBackground();
-        alert(`Upgraded to Level ${level}!`);
-      } else {
-        alert("Not enough points or already at max level.");
-      }
-    }
-
-    function changeBackground() {
-      document.body.style.backgroundImage = `url('background-level${level}.jpg')`;
-    }
-
-    function switchPage(page) {
-      const pageContent = document.getElementById("pageContent");
-      if (page === "home") {
-        pageContent.innerHTML = `
-          <div class="claim-box" id="claimBox">
-            <h2>Claim your points</h2>
-            <p id="claimMessage">Click below to earn points.</p>
-            <button onclick="claimPoints()">Claim</button>
-          </div>`;
-      } else if (page === "task") {
-        pageContent.innerHTML = "<h2>Tasks Coming Soon</h2>";
-      } else if (page === "referral") {
-        pageContent.innerHTML = "<h2>Refer your friends to earn bonus!</h2>";
-      } else if (page === "upgrade") {
-        pageContent.innerHTML = `
-          <h2>Upgrade Your Level</h2>
-          <p>Cost: ${upgradeCosts[level] || "MAX"} points</p>
-          <button onclick="upgradeLevel()">Upgrade</button>`;
-      } else if (page === "wallet") {
-        pageContent.innerHTML = `<h2>Your Wallet</h2><p>You have ${coins} points.</p>`;
-      }
-    }
-  </script>
-</body>
-</html>
+        <!-- টোকেন কনভার্শন -->
+        <div class="row mt-4">
+            <div class="col-md-6 mx-auto">
+                <div class="dashboard-ca
