@@ -1,99 +1,369 @@
-if(userData.lastClaim === 0 || timeDiff >= 10800) { // 3 hours = 10800 seconds
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Mining Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 0.5s ease;
+        }
+        .page {
+            display: none;
+            padding: 15px;
+            min-height: calc(100vh - 60px);
+        }
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 8px 5px;
+            margin: 2px;
+            width: 100%;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(50, 50, 150, 0.9);
+            transform: translateY(-2px);
+        }
+        #claimBtn {
+            background: linear-gradient(45deg, #FF512F, #F09819);
+            border: none;
+            font-weight: bold;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        #claimBtn:disabled {
+            background: #6c757d;
+            box-shadow: none;
+        }
+        #timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: inline-block;
+        }
+        .upgrade-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .status-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .task-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        .progress {
+            height: 18px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .referral-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            border-radius: 10px;
+            margin: 12px 0;
+        }
+        .floating-alert {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid py-1" style="background: rgba(0, 0, 0, 0.9); position: sticky; top: 0; z-index: 100;">
+        <div class="row text-center">
+            <div class="col-3 p-1">
+                <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+            </div>
+            <div class="col-3 p-1">
+                <button class="nav-btn" onclick="showPage('task')">✅ Task</button>
+            </div>
+            <div class="col-3 p-1">
+                <button class="nav-btn" onclick="showPage('referral')">👥 Refferal</button>
+            </div>
+            <div class="col-3 p-1">
+                <button class="nav-btn" onclick="showPage('upgrade')">⬆️ Upgrade</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="alertBox" class="floating-alert alert alert-success alert-dismissible fade show" role="alert">
+        <span id="alertMessage">Operation successful!</span>
+        <button type="button" class="btn-close" onclick="hideAlert()"></button>
+    </div>
+    
+    <div id="home" class="page">
+        <div class="container text-center py-2">
+            <div class="status-card">
+                <h1 class="h4">🛠️ Crypto Mining Bot</h1>
+                <p>Level: <span id="currentLevel">0</span> | Mining: <span id="miningSpeed">100</span> coins/3h</p>
+                <div class="my-2">
+                    <h2 id="pointsDisplay">0</h2>
+                    <p>Points</p>
+                </div>
+                <button id="claimBtn" class="btn" onclick="claimPoints()">Claim 100 Points</button>
+                <div id="timer" class="mt-2">Next claim in: 03:00:00</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="task" class="page">
+        <div class="container py-2">
+            <h1 class="h5 text-center mb-3">✅ Daily Tasks</h1>
+            <div class="upgrade-card">
+                <h4 class="h6">📱 Follow on Twitter</h4>
+                <p>Get 200 points</p>
+                <button class="btn task-btn">Complete</button>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">📢 Join Telegram</h4>
+                <p>Get 300 points</p>
+                <button class="btn task-btn">Complete</button>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">📤 Share Bot</h4>
+                <p>Get 500 points</p>
+                <button class="btn task-btn">Complete</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="referral" class="page">
+        <div class="container py-2">
+            <h1 class="h5 text-center mb-3">👥 Referral Program</h1>
+            <div class="referral-box">
+                <h4 class="h6 text-center">🔗 Your Referral Link</h4>
+                <div class="input-group input-group-sm mb-2">
+                    <input type="text" id="referralLink" class="form-control form-control-sm" value="https://t.me/YourBot?ref=12345" readonly>
+                    <button class="btn btn-sm btn-success" onclick="copyReferralLink()">Copy</button>
+                </div>
+                <p class="text-center small">Earn 10% of referrals' earnings!</p>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6 text-center">📊 Your Stats</h4>
+                <p>Referrals: <strong>0</strong></p>
+                <p>Earned: <strong>0</strong> points</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="upgrade" class="page">
+        <div class="container py-2">
+            <h1 class="h5 text-center mb-3">⬆️ Upgrade Level</h1>
+            <div class="upgrade-card">
+                <h4 class="h6">Current Level: <span id="currentLevel2">0</span></h4>
+                <div class="progress">
+                    <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <p class="small">To next level: <span id="pointsToNext">5000</span></p>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">⚡ Level 0 → 1</h4>
+                <p>Cost: 5,000 points</p>
+                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">⚡ Level 1 → 2</h4>
+                <p>Cost: 8,000 points</p>
+                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">⚡ Level 2 → 3</h4>
+                <p>Cost: 12,000 points</p>
+                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
+            </div>
+            <div class="upgrade-card">
+                <h4 class="h6">💎 Level 3 → GOD</h4>
+                <p>Cost: 15,000 points</p>
+                <button class="btn btn-sm btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userData = JSON.parse(localStorage.getItem('userData')) || {
+            points: 0,
+            level: 0,
+            lastClaim: 0,
+            miningSpeed: 100
+        };
+        
+        const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
+        const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
+        const bgImages = {
+            0: 'background-level0.jpg',
+            1: 'background-level1.jpg',
+            2: 'background-level2.jpg',
+            3: 'background-level3.jpg',
+            4: 'background-level4.jpg'
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('home');
+            updateUI();
+            startTimer();
+        });
+        
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+            
+            if(pageId === 'home') {
+                document.body.style.backgroundImage = `url('${bgImages[userData.level]}')`;
+            } else {
+                document.body.style.backgroundImage = "url('background-general.jpg')";
+            }
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            updateUI();
+        }
+        
+        function updateUI() {
+            document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
+            document.querySelectorAll('#currentLevel, #currentLevel2').forEach(el => {
+                el.textContent = userData.level;
+            });
+            document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
+            
+            const nextLevel = userData.level + 1;
+            if(nextLevel <= 4) {
+                const neededPoints = levelCosts[nextLevel];
+                const progress = Math.min(100, (userData.points / neededPoints) * 100);
+                document.getElementById('levelProgress').style.width = `${progress}%`;
+                document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
+            }
+            
+            const claimBtn = document.getElementById('claimBtn');
+            const currentTime = Math.floor(Date.now() / 1000);
+            const timeDiff = currentTime - userData.lastClaim;
+            
+            if(userData.lastClaim === 0 || timeDiff >= 10800) {
                 claimBtn.disabled = false;
-                claimBtn.textContent = Claim ${levelRewards[userData.level]} Points;
+                claimBtn.textContent = `Claim ${levelRewards[userData.level]} Points`;
             } else {
                 claimBtn.disabled = true;
             }
         }
         
-        // ক্লেইম পয়েন্ট
         function claimPoints() {
             const currentTime = Math.floor(Date.now() / 1000);
-            
-            // ৩ ঘন্টার টাইমার চেক
             if(userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
-                alert('Please wait until the timer completes!');
+                showAlert('Please wait until the timer completes!', 'warning');
                 return;
             }
             
-            // পয়েন্ট যোগ
             userData.points += levelRewards[userData.level];
             userData.lastClaim = currentTime;
-            
-            // ডেটা সেভ
             localStorage.setItem('userData', JSON.stringify(userData));
-            
-            // UI আপডেট
             updateUI();
             startTimer();
-            
-            alert(Successfully claimed ${levelRewards[userData.level]} points!);
+            showAlert(`Successfully claimed ${levelRewards[userData.level]} points!`, 'success');
         }
         
-        // টাইমার ফাংশন
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
-            const timerInterval = setInterval(() => {
+            if(window.timerInterval) clearInterval(window.timerInterval);
+            
+            window.timerInterval = setInterval(() => {
                 const currentTime = Math.floor(Date.now() / 1000);
                 const timeDiff = currentTime - userData.lastClaim;
                 const remainingTime = 10800 - timeDiff;
                 
                 if(remainingTime <= 0) {
-                    clearInterval(timerInterval);
+                    clearInterval(window.timerInterval);
                     timerElement.textContent = 'Ready to claim!';
                     claimBtn.disabled = false;
                     return;
                 }
                 
-                // সময় ফরম্যাট
                 const hours = Math.floor(remainingTime / 3600);
                 const minutes = Math.floor((remainingTime % 3600) / 60);
                 const seconds = remainingTime % 60;
                 
-                timerElement.textContent = Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')};
+                timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
         }
         
-        // লেভেল আপগ্রেড
         function upgradeLevel(targetLevel) {
             const cost = levelCosts[targetLevel];
             
-            // চেক লেভেল
             if(userData.level !== targetLevel - 1) {
-                alert(You need to be at level ${targetLevel - 1} to upgrade to level ${targetLevel});
+                showAlert(`You need to be at level ${targetLevel - 1} to upgrade!`, 'warning');
                 return;
             }
             
-            // চেক পয়েন্ট
             if(userData.points < cost) {
-                alert(You need ${cost - userData.points} more points to upgrade!);
+                showAlert(`You need ${(cost - userData.points).toLocaleString()} more points!`, 'danger');
                 return;
             }
             
-            // আপগ্রেড
             userData.points -= cost;
             userData.level = targetLevel;
-            
-            // ব্যকগ্রাউন্ড আপডেট
-            document.getElementById('home').style.backgroundImage = url('background-level${targetLevel}.jpg');
-            
-            // ডেটা সেভ
+            document.body.style.backgroundImage = `url('${bgImages[targetLevel]}')`;
             localStorage.setItem('userData', JSON.stringify(userData));
-            
-            // UI আপডেট
             updateUI();
-            
-            alert(Congratulations! Upgraded to level ${targetLevel});
+            showAlert(`Upgraded to level ${targetLevel}! Mining speed increased.`, 'success');
         }
         
-        // রেফারেল লিংক কপি
         function copyReferralLink() {
             const linkInput = document.getElementById('referralLink');
             linkInput.select();
             document.execCommand('copy');
-            alert('Referral link copied to clipboard!');
+            showAlert('Referral link copied to clipboard!', 'info');
+        }
+        
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            alertBox.className = `floating-alert alert alert-${type} alert-dismissible fade show`;
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+            
+            setTimeout(hideAlert, 3000);
+        }
+        
+        function hideAlert() {
+            document.getElementById('alertBox').style.display = 'none';
         }
     </script>
 </body>
