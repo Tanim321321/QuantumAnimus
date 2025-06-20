@@ -282,7 +282,7 @@
     <div class="nav-container">
         <div class="row text-center">
             <div class="col-3">
-                <button class="nav-btn active" onclick="showPage('home')">
+                <button class="nav-btn" onclick="showPage('home')">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </button>
@@ -309,154 +309,187 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/+esm"></script>
-<script type="module">
-  const supabaseUrl = 'https://ibjigvfbqdeyortbctra.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c';
-  const supabase = createClient(supabaseUrl, supabaseKey);
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/+esm"></script>
+    <script type="module">
+        const supabaseUrl = 'https://ibjigvfbqdeyortbctra.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c';
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const telegramId = window.Telegram.WebApp.initDataUnsafe.user.id;
-  let user = null;
+        // পেজ ভিজিবিলিটি কন্ট্রোল ফাংশন
+        function showPage(pageId) {
+            // সব পেজ লুকিয়ে দিন
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // শুধু নির্বাচিত পেজ দেখান
+            document.getElementById(pageId).style.display = 'block';
+            
+            // নেভিগেশন বাটন এক্টিভ/ইনএক্টিভ করুন
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`).classList.add('active');
+        }
 
-  const levelRewards = { 0: 100, 1: 125, 2: 150, 3: 175, 4: 200 };
-  const levelCosts = { 1: 5000, 2: 8000, 3: 12000, 4: 15000 };
+        const telegramId = window.Telegram.WebApp.initDataUnsafe?.user?.id || 'demo-user';
+        let user = null;
 
-  async function loadOrCreateUser() {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('telegram_id', telegramId)
-      .single();
+        const levelRewards = { 0: 100, 1: 125, 2: 150, 3: 175, 4: 200 };
+        const levelCosts = { 1: 5000, 2: 8000, 3: 12000, 4: 15000 };
 
-    if (error) {
-      const ref = new URLSearchParams(window.location.search).get('ref') || null;
-      const { data: newUser } = await supabase
-        .from('users')
-        .insert([{ telegram_id: telegramId, points: 0, level: 0, last_claim: 0, referrals: 0, referred_by: ref }])
-        .select()
-        .single();
+        async function loadOrCreateUser() {
+            const { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('telegram_id', telegramId)
+                .single();
 
-      if (ref) {
-        await supabase.rpc('increment_referrals', { referrer_id: ref });
-      }
+            if (error) {
+                const ref = new URLSearchParams(window.location.search).get('ref') || null;
+                const { data: newUser } = await supabase
+                    .from('users')
+                    .insert([{ 
+                        telegram_id: telegramId, 
+                        points: 0, 
+                        level: 0, 
+                        last_claim: 0, 
+                        referrals: 0, 
+                        referred_by: ref 
+                    }])
+                    .select()
+                    .single();
 
-      user = newUser;
-    } else {
-      user = data;
-    }
+                if (ref) {
+                    await supabase.rpc('increment_referrals', { referrer_id: ref });
+                }
 
-    updateUIFromUser();
-    startTimer();
-  }
+                user = newUser;
+            } else {
+                user = data;
+            }
 
-  function updateUIFromUser() {
-    document.getElementById('pointsDisplay').textContent = user.points;
-    document.getElementById('currentLevel').textContent = user.level;
-    document.getElementById('currentLevel2').textContent = user.level;
-    document.getElementById('miningSpeed').textContent = levelRewards[user.level];
+            updateUIFromUser();
+            startTimer();
+        }
 
-    const nextLevel = user.level + 1;
-    if (nextLevel <= 4) {
-      const needed = levelCosts[nextLevel];
-      const progress = Math.min(100, (user.points / needed) * 100);
-      document.getElementById('levelProgress').style.width = `${progress}%`;
-      document.getElementById('pointsToNext').textContent = needed - user.points;
-    }
-  }
+        function updateUIFromUser() {
+            document.getElementById('pointsDisplay').textContent = user.points;
+            document.getElementById('currentLevel').textContent = user.level;
+            document.getElementById('currentLevel2').textContent = user.level;
+            document.getElementById('miningSpeed').textContent = levelRewards[user.level];
 
-  function startTimer() {
-    const timerElement = document.getElementById('timer');
-    const claimBtn = document.getElementById('claimBtn');
-    clearInterval(window.timerInterval);
+            const nextLevel = user.level + 1;
+            if (nextLevel <= 4) {
+                const needed = levelCosts[nextLevel];
+                const progress = Math.min(100, (user.points / needed) * 100);
+                document.getElementById('levelProgress').style.width = `${progress}%`;
+                document.getElementById('pointsToNext').textContent = needed - user.points;
+            }
+        }
 
-    window.timerInterval = setInterval(() => {
-      const now = Math.floor(Date.now() / 1000);
-      const remaining = Math.max(0, 10800 - (now - user.last_claim));
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            const claimBtn = document.getElementById('claimBtn');
+            clearInterval(window.timerInterval);
 
-      if (remaining <= 0) {
-        timerElement.textContent = "Ready to claim!";
-        claimBtn.disabled = false;
-        claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[user.level]} POINTS`;
-        clearInterval(window.timerInterval);
-      } else {
-        const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
-        const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
-        const s = String(remaining % 60).padStart(2, '0');
-        timerElement.textContent = `Next claim in: ${h}:${m}:${s}`;
-        claimBtn.disabled = true;
-      }
-    }, 1000);
-  }
+            window.timerInterval = setInterval(() => {
+                const now = Math.floor(Date.now() / 1000);
+                const remaining = Math.max(0, 10800 - (now - user.last_claim));
 
-  async function claimPoints() {
-    const now = Math.floor(Date.now() / 1000);
-    if (now - user.last_claim < 10800) {
-      alert("Please wait before claiming again.");
-      return;
-    }
+                if (remaining <= 0) {
+                    timerElement.textContent = "Ready to claim!";
+                    claimBtn.disabled = false;
+                    claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[user.level]} POINTS`;
+                    clearInterval(window.timerInterval);
+                } else {
+                    const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
+                    const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+                    const s = String(remaining % 60).padStart(2, '0');
+                    timerElement.textContent = `Next claim in: ${h}:${m}:${s}`;
+                    claimBtn.disabled = true;
+                }
+            }, 1000);
+        }
 
-    const reward = levelRewards[user.level];
-    const newPoints = user.points + reward;
+        async function claimPoints() {
+            const now = Math.floor(Date.now() / 1000);
+            if (now - user.last_claim < 10800) {
+                alert("Please wait before claiming again.");
+                return;
+            }
 
-    const { data, error } = await supabase
-      .from('users')
-      .update({ points: newPoints, last_claim: now })
-      .eq('telegram_id', telegramId)
-      .select()
-      .single();
+            const reward = levelRewards[user.level];
+            const newPoints = user.points + reward;
 
-    user = data;
-    updateUIFromUser();
-    startTimer();
-    alert(`Claimed ${reward} points!`);
+            const { data, error } = await supabase
+                .from('users')
+                .update({ points: newPoints, last_claim: now })
+                .eq('telegram_id', telegramId)
+                .select()
+                .single();
 
-    if (user.referred_by) {
-      const { data: refUser } = await supabase
-        .from('users')
-        .select('points')
-        .eq('telegram_id', user.referred_by)
-        .single();
+            user = data;
+            updateUIFromUser();
+            startTimer();
+            alert(`Claimed ${reward} points!`);
 
-      if (refUser) {
-        const refBonus = Math.floor(reward * 0.10);
-        await supabase
-          .from('users')
-          .update({ points: refUser.points + refBonus })
-          .eq('telegram_id', user.referred_by);
-      }
-    }
-  }
+            if (user.referred_by) {
+                const { data: refUser } = await supabase
+                    .from('users')
+                    .select('points')
+                    .eq('telegram_id', user.referred_by)
+                    .single();
 
-  async function upgradeLevel(targetLevel) {
-    if (user.level !== targetLevel - 1) {
-      alert("Upgrade step-by-step please.");
-      return;
-    }
+                if (refUser) {
+                    const refBonus = Math.floor(reward * 0.10);
+                    await supabase
+                        .from('users')
+                        .update({ points: refUser.points + refBonus })
+                        .eq('telegram_id', user.referred_by);
+                }
+            }
+        }
 
-    const cost = levelCosts[targetLevel];
-    if (user.points < cost) {
-      alert(`Need ${cost - user.points} more points.`);
-      return;
-    }
+        async function upgradeLevel(targetLevel) {
+            if (user.level !== targetLevel - 1) {
+                alert("Upgrade step-by-step please.");
+                return;
+            }
 
-    const { data, error } = await supabase
-      .from('users')
-      .update({
-        level: targetLevel,
-        points: user.points - cost
-      })
-      .eq('telegram_id', telegramId)
-      .select()
-      .single();
+            const cost = levelCosts[targetLevel];
+            if (user.points < cost) {
+                alert(`Need ${cost - user.points} more points.`);
+                return;
+            }
 
-    user = data;
-    updateUIFromUser();
-    alert(`Upgraded to Level ${targetLevel}!`);
-  }
+            const { data, error } = await supabase
+                .from('users')
+                .update({
+                    level: targetLevel,
+                    points: user.points - cost
+                })
+                .eq('telegram_id', telegramId)
+                .select()
+                .single();
 
-  document.addEventListener('DOMContentLoaded', loadOrCreateUser);
-</script>
+            user = data;
+            updateUIFromUser();
+            alert(`Upgraded to Level ${targetLevel}!`);
+        }
 
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Referral link copied to clipboard!');
+        }
+
+        // ডকুমেন্ট লোড হলে
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrCreateUser();
+            showPage('home'); // প্রথমে হোম পেজ শো করুন
+        });
+    </script>
 </body>
 </html>
