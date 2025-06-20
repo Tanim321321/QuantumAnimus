@@ -1,143 +1,652 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Qerion Mining</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { font-family: 'Segoe UI'; color: white; background: linear-gradient(135deg, #0f172a, #1e293b); padding-bottom: 70px; }
-    .page { display: none; padding: 15px; min-height: calc(100vh - 70px); }
-    .nav-container { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(30,41,59,0.7); backdrop-filter: blur(10px); padding: 10px; }
-    .nav-btn { background: transparent; border: none; color: #cbd5e1; padding: 12px 5px; width: 100%; border-radius: 12px; }
-    .nav-btn:hover, .nav-btn.active { background: rgba(56,189,248,0.2); color: #38bdf8; transform: translateY(-5px); }
-    .nav-btn.active { color: #10b981; }
-    #claimBtn { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; font-weight: bold; padding: 18px 30px; font-size: 1.2rem; border-radius: 16px; }
-    #claimBtn:disabled { background: #475569; }
-    .status-card, .task-card { background: rgba(30,41,59,0.7); border-radius: 16px; padding: 20px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); }
-    .points-display { font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, #38bdf8, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stats-row { display: flex; justify-content: space-around; text-align: center; }
-    .stat-box { background: rgba(15,23,42,0.5); padding: 15px; border-radius: 12px; width: 45%; }
-    .stat-value { font-size: 1.8rem; font-weight: 700; color: #10b981; }
-    .task-btn { background: linear-gradient(135deg, #10b981, #3b82f6); border: none; padding: 10px 20px; border-radius: 10px; margin-top: 10px; color: white; font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Mining Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background-attachment: fixed;
+            padding-bottom: 70px;
+        }
+        
+        .page {
+            display: none;
+            padding: 15px;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            padding: 12px 5px;
+            margin: 0 2px;
+            width: 100%;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            border-radius: 12px;
+        }
+        
+        .nav-btn i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            transform: translateY(-5px);
+        }
+        
+        .nav-btn.active {
+            color: #10b981;
+        }
+        
+        #claimBtn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            font-weight: bold;
+            padding: 18px 30px;
+            font-size: 1.2rem;
+            border-radius: 16px;
+            margin: 25px 0 15px;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s;
+        }
+        
+        #claimBtn:disabled {
+            background: #475569;
+            box-shadow: none;
+        }
+        
+        #timer {
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 12px 25px;
+            border-radius: 12px;
+            margin: 15px auto;
+            display: inline-block;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        
+        .status-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .points-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .stat-box {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            width: 45%;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .task-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-btn {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <!-- Home Page -->
-  <div id="home" class="page">
-    <div class="container text-center py-3">
-      <div class="status-card">
-        <div class="stats-row">
-          <div class="stat-box">
-            <div>Level</div>
-            <div class="stat-value" id="currentLevel">0</div>
-          </div>
-          <div class="stat-box">
-            <div>Mining</div>
-            <div class="stat-value" id="miningSpeed">100</div>
-            <div>coins/3h</div>
-          </div>
+    <!-- Home Page -->
+    <div id="home" class="page">
+        <div class="container text-center py-3">
+            <div class="status-card">
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div>Level</div>
+                        <div class="stat-value" id="currentLevel">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div>Mining</div>
+                        <div class="stat-value" id="miningSpeed">100</div>
+                        <div>coins/3h</div>
+                    </div>
+                </div>
+                
+                <h3 class="mb-3">YOUR BALANCE</h3>
+                <div class="points-display" id="pointsDisplay">0</div>
+                <p>Total Points</p>
+                
+                <button id="claimBtn" class="btn" onclick="claimPoints()">
+                    <i class="fas fa-gem me-2"></i>CLAIM POINTS
+                </button>
+                
+                <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
+            </div>
         </div>
-        <h3 class="mb-3">YOUR BALANCE</h3>
-        <div class="points-display" id="pointsDisplay">0</div>
-        <p>Total Points</p>
-        <button id="claimBtn" class="btn" onclick="claimPoints()">
-          <i class="fas fa-gem me-2"></i>CLAIM POINTS
-        </button>
-        <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
-      </div>
     </div>
-  </div>
-
-  <!-- Navigation Bar -->
-  <div class="nav-container">
-    <div class="row text-center">
-      <div class="col-3">
-        <button class="nav-btn active" onclick="showPage('home')">
-          <i class="fas fa-home"></i>
-          <span>Home</span>
-        </button>
-      </div>
+    
+    <!-- Task Page -->
+    <div id="task" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">✅ Daily Tasks</h1>
+            
+            <div class="task-card">
+                <h4><i class="fab fa-telegram me-2"></i>Join Telegram Group</h4>
+                <p>Get 300 points for joining our official group</p>
+                <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="task-btn">
+                    <i class="fab fa-telegram me-2"></i>Join Now
+                </a>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
+                <p>Get 200 points for following us</p>
+                <button class="task-btn">
+                    <i class="fab fa-twitter me-2"></i>Follow
+                </button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-share-alt me-2"></i>Share with Friends</h4>
+                <p>Get 500 points for sharing</p>
+                <button class="task-btn">
+                    <i class="fas fa-share-alt me-2"></i>Share
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+    
+    <!-- Referral Page -->
+    <div id="referral" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">👥 Referral Program</h1>
+            
+            <div class="task-card">
+                <h4 class="text-center"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
+                <div class="input-group mb-3">
+                    <input type="text" id="referralLink" class="form-control" value="Loading..." readonly>
+                    <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
+                </div>
+                <p class="text-center">Earn 10% of your referrals' earnings!</p>
+            </div>
+            
+            <div class="task-card">
+                <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Stats</h4>
+                <p>Total Referrals: <strong id="totalReferrals">0</strong></p>
+                <p>Earned Points: <strong id="earnedPoints">0</strong></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upgrade Page -->
+    <div id="upgrade" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">⬆️ Upgrade Level</h1>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <p class="mt-2">Points needed: <span id="pointsToNext">5000</span></p>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
+                <p>Cost: 5,000 points</p>
+                <p>Reward: 125 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
+                <p>Cost: 8,000 points</p>
+                <p>Reward: 150 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
+                <p>Cost: 12,000 points</p>
+                <p>Reward: 175 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-crown me-2"></i>Level 3 → God Level</h4>
+                <p>Cost: 15,000 points</p>
+                <p>Reward: 200 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
+            </div>
+        </div>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    let supabase;
-    document.addEventListener('DOMContentLoaded', async () => {
-      supabase = window.supabase.createClient(
-        'https://ibjigvfbqdeyortbctra.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c'
-      );
-      await initUser();
-    });
+    <!-- Navigation Bar (Bottom) -->
+    <div class="nav-container">
+        <div class="row text-center">
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('home')">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('task')">
+                    <i class="fas fa-tasks"></i>
+                    <span>Task</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('referral')">
+                    <i class="fas fa-users"></i>
+                    <span>Referral</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <button class="nav-btn" onclick="showPage('upgrade')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Upgrade</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-    const levelCosts = {1:5000,2:8000,3:12000,4:15000};
-    const levelRewards = {0:100,1:125,2:150,3:175,4:200};
-    let currentUser = {};
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ========================
+        // SUPABASE CONFIGURATION
+        // ========================
+        const SUPABASE_URL = 'https://ibjigvfbqdeyortbctra.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function initUser() {
-      const tgId = window?.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'demo_user';
-      const ref = new URLSearchParams(location.search).get('ref');
-      const { data, error } = await supabase.from('users').select('*').eq('telegram_id', tgId).single();
-      if (!data) {
-        const { data: newUser } = await supabase.from('users').insert([{ telegram_id: tgId, level: 0, points: 0, last_claim: 0, referrals: 0, referral_code: Math.random().toString(36).substr(2, 8), referred_by: ref || null }]).select().single();
-        currentUser = newUser;
-      } else {
-        currentUser = data;
-      }
-      updateUI();
-      startTimer();
-    }
+        // ========================
+        // APP STATE
+        // ========================
+        let currentUser = {
+            id: null,
+            telegram_id: '',
+            points: 0,
+            level: 0,
+            last_claim: 0,
+            referrals: 0,
+            referral_code: '',
+            referred_by: null
+        };
 
-    function updateUI() {
-      document.getElementById('pointsDisplay').textContent = currentUser.points;
-      document.getElementById('currentLevel').textContent = currentUser.level;
-      document.getElementById('miningSpeed').textContent = levelRewards[currentUser.level];
-      showPage('home');
-    }
+        const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
+        const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
 
-    async function claimPoints() {
-      const now = Math.floor(Date.now() / 1000);
-      if (now - currentUser.last_claim < 10800) return alert('Wait before claiming again!');
-      const reward = levelRewards[currentUser.level];
-      const { data } = await supabase.from('users').update({ points: currentUser.points + reward, last_claim: now }).eq('telegram_id', currentUser.telegram_id).select().single();
-      currentUser = data;
-      updateUI(); startTimer(); alert(`Claimed ${reward} points!`);
-    }
+        // ========================
+        // INITIALIZATION
+        // ========================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show home page immediately
+            showPage('home');
+            
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            
+            // Initialize user (demo mode - replace with actual Telegram ID)
+            await initUser('demo_user_123', refCode);
+            
+            // Start the claim timer
+            startTimer();
+            
+            // Enable real-time updates
+            subscribeToUpdates();
+        });
 
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick')?.includes(id)) btn.classList.add('active');
-      });
-    }
+        // ========================
+        // USER MANAGEMENT
+        // ========================
+        async function initUser(telegramId, refCode = null) {
+            try {
+                // Check if user exists
+                const { data: existingUser, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('telegram_id', telegramId)
+                    .single();
 
-    function startTimer() {
-      const timer = document.getElementById('timer');
-      const claimBtn = document.getElementById('claimBtn');
-      clearInterval(window.timerInterval);
-      window.timerInterval = setInterval(() => {
-        const now = Math.floor(Date.now() / 1000);
-        const remaining = Math.max(0, 10800 - (now - currentUser.last_claim));
-        if (remaining <= 0) {
-          timer.textContent = "Ready to claim!";
-          claimBtn.disabled = false;
-          claimBtn.innerHTML = `<i class=\"fas fa-gem me-2\"></i>CLAIM ${levelRewards[currentUser.level]} POINTS`;
-          clearInterval(window.timerInterval);
-        } else {
-          const h = String(Math.floor(remaining / 3600)).padStart(2, '0');
-          const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
-          const s = String(remaining % 60).padStart(2, '0');
-          timer.textContent = `Next claim in: ${h}:${m}:${s}`;
-          claimBtn.disabled = true;
+                if (existingUser) {
+                    currentUser = existingUser;
+                    console.log("Existing user loaded:", currentUser);
+                } else {
+                    // Create new user
+                    const newUser = {
+                        telegram_id: telegramId,
+                        points: 0,
+                        level: 0,
+                        last_claim: 0,
+                        referrals: 0,
+                        referral_code: generateReferralCode(),
+                        referred_by: refCode
+                    };
+                    
+                    const { data, error } = await supabase
+                        .from('users')
+                        .insert([newUser])
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+                    currentUser = data;
+                    console.log("New user created:", currentUser);
+                    
+                    // Update referrer's stats if applicable
+                    if (refCode) {
+                        await handleReferral(refCode);
+                    }
+                }
+                
+                updateUI();
+            } catch (error) {
+                console.error("Error initializing user:", error);
+                alert("Error loading user data. Please refresh.");
+            }
         }
-      }, 1000);
-    }
-  </script>
+
+        async function handleReferral(refCode) {
+            try {
+                // Find referrer
+                const { data: referrer, error } = await supabase
+                    .from('users')
+                    .select('id, referrals')
+                    .eq('referral_code', refCode)
+                    .single();
+                
+                if (referrer) {
+                    // Update referrer's count
+                    await supabase
+                        .from('users')
+                        .update({ referrals: referrer.referrals + 1 })
+                        .eq('id', referrer.id);
+                    console.log("Referral counted for:", refCode);
+                }
+            } catch (error) {
+                console.error("Referral error:", error);
+            }
+        }
+
+        // ========================
+        // CORE FUNCTIONS
+        // ========================
+        async function claimPoints() {
+            try {
+                const now = Math.floor(Date.now() / 1000);
+                const cooldown = 10800; // 3 hours in seconds
+                
+                if (currentUser.last_claim > 0 && (now - currentUser.last_claim) < cooldown) {
+                    alert("Please wait before claiming again!");
+                    return;
+                }
+                
+                const reward = levelRewards[currentUser.level];
+                
+                // Update in Supabase first
+                const { data, error } = await supabase
+                    .from('users')
+                    .update({
+                        points: currentUser.points + reward,
+                        last_claim: now
+                    })
+                    .eq('id', currentUser.id)
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+                
+                // Then update local state
+                currentUser = data;
+                console.log("Points claimed:", reward, "New balance:", currentUser.points);
+                
+                updateUI();
+                startTimer();
+                alert(`Successfully claimed ${reward} points!`);
+                
+                // Handle referral bonus if applicable
+                if (currentUser.referred_by) {
+                    await awardReferralBonus(currentUser.referred_by, reward);
+                }
+            } catch (error) {
+                console.error("Claim error:", error);
+                alert("Error claiming points. Please try again.");
+            }
+        }
+
+        async function awardReferralBonus(referrerCode, amount) {
+            try {
+                const bonus = Math.floor(amount * 0.1); // 10% bonus
+                console.log("Awarding referral bonus:", bonus, "to", referrerCode);
+                
+                // Get referrer's current points
+                const { data: referrer, error } = await supabase
+                    .from('users')
+                    .select('points')
+                    .eq('referral_code', referrerCode)
+                    .single();
+                
+                if (referrer) {
+                    // Award bonus
+                    await supabase
+                        .from('users')
+                        .update({ points: referrer.points + bonus })
+                        .eq('referral_code', referrerCode);
+                }
+            } catch (error) {
+                console.error("Referral bonus error:", error);
+            }
+        }
+
+        async function upgradeLevel(targetLevel) {
+            try {
+                if (currentUser.level !== targetLevel - 1) {
+                    alert(`Please upgrade to level ${targetLevel - 1} first!`);
+                    return;
+                }
+                
+                const cost = levelCosts[targetLevel];
+                if (currentUser.points < cost) {
+                    alert(`You need ${cost - currentUser.points} more points!`);
+                    return;
+                }
+                
+                // Update in Supabase first
+                const { data, error } = await supabase
+                    .from('users')
+                    .update({
+                        points: currentUser.points - cost,
+                        level: targetLevel
+                    })
+                    .eq('id', currentUser.id)
+                    .select()
+                    .single();
+                
+                if (error) throw error;
+                
+                // Then update local state
+                currentUser = data;
+                console.log("Upgraded to level:", targetLevel, "Remaining points:", currentUser.points);
+                
+                updateUI();
+                alert(`Upgraded to level ${targetLevel}!`);
+            } catch (error) {
+                console.error("Upgrade error:", error);
+                alert("Error upgrading level. Please try again.");
+            }
+        }
+
+        // ========================
+        // UI FUNCTIONS
+        // ========================
+        function showPage(pageId) {
+            console.log("Showing page:", pageId);
+            
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Show selected page
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.style.display = 'block';
+            }
+            
+            // Update active nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick')?.includes(pageId)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Special handling for referral page
+            if (pageId === 'referral' && currentUser.referral_code) {
+                document.getElementById('referralLink').value = 
+                    `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`;
+                document.getElementById('totalReferrals').textContent = currentUser.referrals;
+                document.getElementById('earnedPoints').textContent = Math.floor(currentUser.points * 0.1);
+            }
+        }
+
+        function updateUI() {
+            console.log("Updating UI with:", currentUser);
+            
+            // Update points display
+            document.getElementById('pointsDisplay').textContent = currentUser.points.toLocaleString();
+            
+            // Update level info
+            document.getElementById('currentLevel').textContent = currentUser.level;
+            document.getElementById('currentLevel2').textContent = currentUser.level;
+            document.getElementById('miningSpeed').textContent = levelRewards[currentUser.level];
+            
+            // Update progress to next level
+            const nextLevel = currentUser.level + 1;
+            if (nextLevel <= 4) {
+                const needed = levelCosts[nextLevel];
+                const progress = Math.min(100, (currentUser.points / needed) * 100);
+                document.getElementById('levelProgress').style.width = `${progress}%`;
+                document.getElementById('pointsToNext').textContent = (needed - currentUser.points).toLocaleString();
+            }
+        }
+
+        function startTimer() {
+            console.log("Starting timer...");
+            const timerElement = document.getElementById('timer');
+            const claimBtn = document.getElementById('claimBtn');
+            
+            // Clear existing timer
+            if (window.timerInterval) {
+                clearInterval(window.timerInterval);
+            }
+            
+            function updateTimer() {
+                const now = Math.floor(Date.now() / 1000);
+                const lastClaim = currentUser.last_claim || 0;
+                const elapsed = now - lastClaim;
+                const remaining = Math.max(0, 10800 - elapsed); // 3 hours cooldown
+                
+                if (remaining <= 0) {
+                    timerElement.textContent = "Ready to claim!";
+                    claimBtn.disabled = false;
+                    claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[currentUser.level]} POINTS`;
+                    clearInterval(window.timerInterval);
+                } else {
+                    const hours = Math.floor(remaining / 3600).toString().padStart(2, '0');
+                    const mins = Math.floor((remaining % 3600) / 60).toString().padStart(2, '0');
+                    const secs = Math.floor(remaining % 60).toString().padStart(2, '0');
+                    timerElement.textContent = `Next claim in: ${hours}:${mins}:${secs}`;
+                    claimBtn.disabled = true;
+                }
+            }
+            
+            // Run immediately and every second
+            updateTimer();
+            window.timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Referral link copied to clipboard!');
+        }
+
+        function subscribeToUpdates() {
+            supabase
+                .channel('user_updates')
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'users',
+                    filter: `id=eq.${currentUser.id}`
+                }, payload => {
+                    console.log("Update received:", payload);
+                    currentUser = payload.new;
+                    updateUI();
+                })
+                .subscribe();
+        }
+
+        function generateReferralCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+    </script>
 </body>
 </html>
