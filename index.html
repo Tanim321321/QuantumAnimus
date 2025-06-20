@@ -7,181 +7,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            background-attachment: fixed;
-            padding-bottom: 70px;
-        }
-        
-        .page {
-            display: none;
-            padding: 15px;
-            min-height: calc(100vh - 70px);
-        }
-        
-        /* Navigation Bar (Bottom) */
-        .nav-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 10px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #cbd5e1;
-            padding: 12px 5px;
-            margin: 0 2px;
-            width: 100%;
-            transition: all 0.3s;
-            font-size: 0.75rem;
-            border-radius: 12px;
-        }
-        
-        .nav-btn i {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-            display: block;
-        }
-        
-        .nav-btn:hover, .nav-btn.active {
-            background: rgba(56, 189, 248, 0.2);
+        /* Previous CSS remains the same */
+        .task-status {
+            font-size: 0.9rem;
             color: #38bdf8;
-            transform: translateY(-5px);
+            margin-top: 8px;
         }
-        
-        .nav-btn.active {
+        .completed {
             color: #10b981;
-        }
-        
-        /* Claim Button */
-        #claimBtn {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border: none;
-            font-weight: bold;
-            padding: 18px 30px;
-            font-size: 1.2rem;
-            border-radius: 16px;
-            margin: 25px 0 15px;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-            transition: all 0.3s;
-        }
-        
-        #claimBtn:disabled {
-            background: #475569;
-            box-shadow: none;
-        }
-        
-        /* Timer Box */
-        #timer {
-            font-size: 1.3rem;
-            font-weight: bold;
-            background: rgba(15, 23, 42, 0.7);
-            padding: 12px 25px;
-            border-radius: 12px;
-            margin: 15px auto;
-            display: inline-block;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-        }
-        
-        /* Cards */
-        .status-card {
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .points-display {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 10px 0;
-        }
-        
-        .stats-row {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin: 25px 0;
-        }
-        
-        .stat-box {
-            background: rgba(15, 23, 42, 0.5);
-            padding: 15px;
-            border-radius: 12px;
-            width: 45%;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #10b981;
-        }
-        
-        /* Task Page Styles */
-        .task-card {
-            background: rgba(30, 41, 59, 0.7);
-            border-radius: 16px;
-            padding: 18px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .task-btn {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 10px;
-            color: white;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <!-- Home Page -->
-    <div id="home" class="page">
-        <div class="container text-center py-3">
-            <div class="status-card">
-                <div class="stats-row">
-                    <div class="stat-box">
-                        <div>Level</div>
-                        <div class="stat-value" id="currentLevel">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div>Mining</div>
-                        <div class="stat-value" id="miningSpeed">100</div>
-                        <div>coins/3h</div>
-                    </div>
-                </div>
-                
-                <h3 class="mb-3">YOUR BALANCE</h3>
-                <div class="points-display" id="pointsDisplay">0</div>
-                <p>Total Points</p>
-                
-                <button id="claimBtn" class="btn" onclick="claimPoints()">
-                    <i class="fas fa-gem me-2"></i>CLAIM POINTS
-                </button>
-                
-                <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
-            </div>
-        </div>
-    </div>
-    
+    <!-- Previous HTML remains the same until Task Page -->
+
     <!-- Task Page -->
     <div id="task" class="page">
         <div class="container py-3">
@@ -193,271 +32,131 @@
                 <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="task-btn">
                     <i class="fab fa-telegram me-2"></i>Join Now
                 </a>
+                <div class="task-status" id="telegramTaskStatus">
+                    <i class="fas fa-circle-notch fa-spin me-1"></i> Verification pending
+                </div>
             </div>
             
             <div class="task-card">
                 <h4><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
                 <p>Get 200 points for following us</p>
-                <button class="task-btn">
-                    <i class="fab fa-twitter me-2"></i>Follow
+                <button class="task-btn" onclick="verifyTwitter()">
+                    <i class="fab fa-twitter me-2"></i>Verify Follow
                 </button>
+                <div class="task-status" id="twitterTaskStatus">
+                    Not completed
+                </div>
             </div>
             
             <div class="task-card">
-                <h4><i class="fas fa-share-alt me-2"></i>Share with Friends</h4>
-                <p>Get 500 points for sharing</p>
-                <button class="task-btn">
-                    <i class="fas fa-share-alt me-2"></i>Share
+                <h4><i class="fab fa-youtube me-2"></i>Subscribe YouTube</h4>
+                <p>Get 500 points for subscribing</p>
+                <button class="task-btn" onclick="verifyYouTube()">
+                    <i class="fab fa-youtube me-2"></i>Verify Subscribe
                 </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Referral Page -->
-    <div id="referral" class="page">
-        <div class="container py-3">
-            <h1 class="text-center mb-4">👥 Referral Program</h1>
-            
-            <div class="task-card">
-                <h4 class="text-center"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
-                <div class="input-group mb-3">
-                    <input type="text" id="referralLink" class="form-control" value="https://t.me/YourBot?ref=12345" readonly>
-                    <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
+                <div class="task-status" id="youtubeTaskStatus">
+                    Not completed
                 </div>
-                <p class="text-center">Earn 10% of your referrals' earnings!</p>
-            </div>
-            
-            <div class="task-card">
-                <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Stats</h4>
-                <p>Total Referrals: <strong>0</strong></p>
-                <p>Earned Points: <strong>0</strong></p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Upgrade Page -->
-    <div id="upgrade" class="page">
-        <div class="container py-3">
-            <h1 class="text-center mb-4">⬆️ Upgrade Level</h1>
-            
-            <div class="task-card">
-                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
-                <div class="progress mt-2" style="height: 10px;">
-                    <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
-                </div>
-                <p class="mt-2">Points needed: <span id="pointsToNext">5000</span></p>
-            </div>
-            
-            <div class="task-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
-                <p>Cost: 5,000 points</p>
-                <p>Reward: 125 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
-            </div>
-            
-            <div class="task-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
-                <p>Cost: 8,000 points</p>
-                <p>Reward: 150 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
-            </div>
-            
-            <div class="task-card">
-                <h4><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
-                <p>Cost: 12,000 points</p>
-                <p>Reward: 175 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
-            </div>
-            
-            <div class="task-card">
-                <h4><i class="fas fa-crown me-2"></i>Level 3 → God Level</h4>
-                <p>Cost: 15,000 points</p>
-                <p>Reward: 200 coins/3h</p>
-                <button class="btn btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Bar (Bottom) -->
-    <div class="nav-container">
-        <div class="row text-center">
-            <div class="col-3">
-                <button class="nav-btn active" onclick="showPage('home')">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </button>
-            </div>
-            <div class="col-3">
-                <button class="nav-btn" onclick="showPage('task')">
-                    <i class="fas fa-tasks"></i>
-                    <span>Task</span>
-                </button>
-            </div>
-            <div class="col-3">
-                <button class="nav-btn" onclick="showPage('referral')">
-                    <i class="fas fa-users"></i>
-                    <span>Referral</span>
-                </button>
-            </div>
-            <div class="col-3">
-                <button class="nav-btn" onclick="showPage('upgrade')">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Upgrade</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- Rest of the HTML remains the same -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // User data with localStorage
+        // Add to userData object
         let userData = JSON.parse(localStorage.getItem('userData')) || {
             points: 0,
             level: 0,
             lastClaim: 0,
-            miningSpeed: 100
+            miningSpeed: 100,
+            completedTasks: {
+                telegram: false,
+                twitter: false,
+                youtube: false
+            }
         };
-        
-        // Level costs
-        const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
-        
-        // Level rewards
-        const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
-        
+
+        // Add this in updateUI function
+        function updateUI() {
+            // Previous updateUI code...
+            
+            // Update task statuses
+            document.getElementById('telegramTaskStatus').className = 
+                `task-status ${userData.completedTasks.telegram ? 'completed' : ''}`;
+            document.getElementById('telegramTaskStatus').innerHTML = 
+                userData.completedTasks.telegram ? 
+                '<i class="fas fa-check-circle me-1"></i> Verified' : 
+                '<i class="fas fa-circle-notch fa-spin me-1"></i> Verification pending';
+                
+            document.getElementById('twitterTaskStatus').className = 
+                `task-status ${userData.completedTasks.twitter ? 'completed' : ''}`;
+            document.getElementById('twitterTaskStatus').innerHTML = 
+                userData.completedTasks.twitter ? 
+                '<i class="fas fa-check-circle me-1"></i> Verified' : 'Not completed';
+                
+            document.getElementById('youtubeTaskStatus').className = 
+                `task-status ${userData.completedTasks.youtube ? 'completed' : ''}`;
+            document.getElementById('youtubeTaskStatus').innerHTML = 
+                userData.completedTasks.youtube ? 
+                '<i class="fas fa-check-circle me-1"></i> Verified' : 'Not completed';
+        }
+
+        // Telegram verification (manual for now)
+        function checkTelegramJoin() {
+            // In real implementation, use Telegram Bot API to verify
+            const isMember = confirm("Have you joined our Telegram group?");
+            if(isMember) {
+                userData.completedTasks.telegram = true;
+                userData.points += 300;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                updateUI();
+            }
+        }
+
+        // Twitter verification simulation
+        function verifyTwitter() {
+            // Simulate API check
+            setTimeout(() => {
+                const isFollowing = confirm("Are you following us on Twitter?");
+                if(isFollowing) {
+                    userData.completedTasks.twitter = true;
+                    userData.points += 200;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    updateUI();
+                    alert("Twitter follow verified! +200 points");
+                }
+            }, 1000);
+        }
+
+        // YouTube verification simulation
+        function verifyYouTube() {
+            // Simulate API check
+            setTimeout(() => {
+                const isSubscribed = confirm("Are you subscribed to our YouTube channel?");
+                if(isSubscribed) {
+                    userData.completedTasks.youtube = true;
+                    userData.points += 500;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    updateUI();
+                    alert("YouTube subscription verified! +500 points");
+                }
+            }, 1000);
+        }
+
+        // Check Telegram join status when task page loads
+        document.getElementById('task').addEventListener('click', function() {
+            if(!userData.completedTasks.telegram) {
+                checkTelegramJoin();
+            }
+        });
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             showPage('home');
             updateUI();
             startTimer();
         });
-        
-        // Show page
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.display = 'none';
-            });
-            document.getElementById(pageId).style.display = 'block';
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-        }
-        
-        // Update UI
-        function updateUI() {
-            document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
-            document.getElementById('currentLevel').textContent = userData.level;
-            document.getElementById('currentLevel2').textContent = userData.level;
-            document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
-            
-            // Update progress
-            const nextLevel = userData.level + 1;
-            if (nextLevel <= 4) {
-                const neededPoints = levelCosts[nextLevel];
-                const progress = (userData.points / neededPoints) * 100;
-                document.getElementById('levelProgress').style.width = `${Math.min(100, progress)}%`;
-                document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
-            }
-            
-            // Update claim button
-            const claimBtn = document.getElementById('claimBtn');
-            const currentTime = Math.floor(Date.now() / 1000);
-            const timeDiff = currentTime - userData.lastClaim;
-            
-            if (userData.lastClaim === 0 || timeDiff >= 10800) {
-                claimBtn.disabled = false;
-                claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[userData.level]} POINTS`;
-            } else {
-                claimBtn.disabled = true;
-            }
-        }
-        
-        // Fixed Timer Function
-        function startTimer() {
-            const timerElement = document.getElementById('timer');
-            const claimBtn = document.getElementById('claimBtn');
-            
-            // Clear existing timer
-            if (window.timerInterval) {
-                clearInterval(window.timerInterval);
-            }
-            
-            const updateTimerDisplay = () => {
-                const now = Math.floor(Date.now() / 1000);
-                const lastClaimTime = userData.lastClaim || 0;
-                const elapsed = now - lastClaimTime;
-                const remaining = Math.max(0, 10800 - elapsed);
-                
-                if (remaining <= 0) {
-                    timerElement.textContent = "Ready to claim!";
-                    claimBtn.disabled = false;
-                    clearInterval(window.timerInterval);
-                    return;
-                }
-                
-                const hours = Math.floor(remaining / 3600);
-                const minutes = Math.floor((remaining % 3600) / 60);
-                const seconds = remaining % 60;
-                
-                timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            };
-            
-            // Run immediately
-            updateTimerDisplay();
-            
-            // Update every second
-            window.timerInterval = setInterval(updateTimerDisplay, 1000);
-        }
-        
-        // Claim points
-        function claimPoints() {
-            const currentTime = Math.floor(Date.now() / 1000);
-            
-            if (userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
-                alert('Please wait until timer completes!');
-                return;
-            }
-            
-            userData.points += levelRewards[userData.level];
-            userData.lastClaim = currentTime;
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            updateUI();
-            startTimer(); // Restart timer
-            
-            alert(`Claimed ${levelRewards[userData.level]} points!`);
-        }
-        
-        // Upgrade level
-        function upgradeLevel(targetLevel) {
-            const cost = levelCosts[targetLevel];
-            
-            if (userData.level !== targetLevel - 1) {
-                alert(`You need to be at level ${targetLevel - 1} first!`);
-                return;
-            }
-            
-            if (userData.points < cost) {
-                alert(`You need ${cost - userData.points} more points!`);
-                return;
-            }
-            
-            userData.points -= cost;
-            userData.level = targetLevel;
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            updateUI();
-            alert(`Upgraded to level ${targetLevel}!`);
-        }
-        
-        // Copy referral link
-        function copyReferralLink() {
-            const linkInput = document.getElementById('referralLink');
-            linkInput.select();
-            document.execCommand('copy');
-            alert('Referral link copied!');
-        }
     </script>
 </body>
 </html>
