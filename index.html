@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Mining Bot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -130,6 +131,25 @@
             font-weight: 700;
             color: #10b981;
         }
+        
+        /* Task Page Styles */
+        .task-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-btn {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -162,6 +182,102 @@
         </div>
     </div>
     
+    <!-- Task Page -->
+    <div id="task" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">✅ Daily Tasks</h1>
+            
+            <div class="task-card">
+                <h4><i class="fab fa-telegram me-2"></i>Join Telegram Group</h4>
+                <p>Get 300 points for joining our official group</p>
+                <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="task-btn">
+                    <i class="fab fa-telegram me-2"></i>Join Now
+                </a>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
+                <p>Get 200 points for following us</p>
+                <button class="task-btn">
+                    <i class="fab fa-twitter me-2"></i>Follow
+                </button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-share-alt me-2"></i>Share with Friends</h4>
+                <p>Get 500 points for sharing</p>
+                <button class="task-btn">
+                    <i class="fas fa-share-alt me-2"></i>Share
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Referral Page -->
+    <div id="referral" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">👥 Referral Program</h1>
+            
+            <div class="task-card">
+                <h4 class="text-center"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
+                <div class="input-group mb-3">
+                    <input type="text" id="referralLink" class="form-control" value="https://t.me/YourBot?ref=12345" readonly>
+                    <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
+                </div>
+                <p class="text-center">Earn 10% of your referrals' earnings!</p>
+            </div>
+            
+            <div class="task-card">
+                <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Stats</h4>
+                <p>Total Referrals: <strong>0</strong></p>
+                <p>Earned Points: <strong>0</strong></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upgrade Page -->
+    <div id="upgrade" class="page">
+        <div class="container py-3">
+            <h1 class="text-center mb-4">⬆️ Upgrade Level</h1>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div id="levelProgress" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <p class="mt-2">Points needed: <span id="pointsToNext">5000</span></p>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
+                <p>Cost: 5,000 points</p>
+                <p>Reward: 125 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(1)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
+                <p>Cost: 8,000 points</p>
+                <p>Reward: 150 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(2)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
+                <p>Cost: 12,000 points</p>
+                <p>Reward: 175 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(3)">Upgrade</button>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-crown me-2"></i>Level 3 → God Level</h4>
+                <p>Cost: 15,000 points</p>
+                <p>Reward: 200 coins/3h</p>
+                <button class="btn btn-warning" onclick="upgradeLevel(4)">Upgrade</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Bar (Bottom) -->
     <div class="nav-container">
         <div class="row text-center">
@@ -193,15 +309,17 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
-        // User data
+        // User data with localStorage
         let userData = JSON.parse(localStorage.getItem('userData')) || {
             points: 0,
             level: 0,
             lastClaim: 0,
             miningSpeed: 100
         };
+        
+        // Level costs
+        const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
         
         // Level rewards
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
@@ -230,13 +348,24 @@
         function updateUI() {
             document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
             document.getElementById('currentLevel').textContent = userData.level;
+            document.getElementById('currentLevel2').textContent = userData.level;
             document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
             
+            // Update progress
+            const nextLevel = userData.level + 1;
+            if (nextLevel <= 4) {
+                const neededPoints = levelCosts[nextLevel];
+                const progress = (userData.points / neededPoints) * 100;
+                document.getElementById('levelProgress').style.width = `${Math.min(100, progress)}%`;
+                document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
+            }
+            
+            // Update claim button
             const claimBtn = document.getElementById('claimBtn');
             const currentTime = Math.floor(Date.now() / 1000);
-            const timeDiff = userData.lastClaim === 0 ? 10800 : currentTime - userData.lastClaim;
+            const timeDiff = currentTime - userData.lastClaim;
             
-            if(timeDiff >= 10800) {
+            if (userData.lastClaim === 0 || timeDiff >= 10800) {
                 claimBtn.disabled = false;
                 claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[userData.level]} POINTS`;
             } else {
@@ -244,24 +373,23 @@
             }
         }
         
-        // New Improved Timer Function
+        // Fixed Timer Function
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
             // Clear existing timer
-            if(window.timerInterval) {
+            if (window.timerInterval) {
                 clearInterval(window.timerInterval);
             }
             
-            // Update timer immediately
-            const updateTimer = () => {
+            const updateTimerDisplay = () => {
                 const now = Math.floor(Date.now() / 1000);
                 const lastClaimTime = userData.lastClaim || 0;
                 const elapsed = now - lastClaimTime;
                 const remaining = Math.max(0, 10800 - elapsed);
                 
-                if(remaining <= 0) {
+                if (remaining <= 0) {
                     timerElement.textContent = "Ready to claim!";
                     claimBtn.disabled = false;
                     clearInterval(window.timerInterval);
@@ -276,17 +404,17 @@
             };
             
             // Run immediately
-            updateTimer();
+            updateTimerDisplay();
             
             // Update every second
-            window.timerInterval = setInterval(updateTimer, 1000);
+            window.timerInterval = setInterval(updateTimerDisplay, 1000);
         }
         
         // Claim points
         function claimPoints() {
             const currentTime = Math.floor(Date.now() / 1000);
             
-            if(userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
+            if (userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
                 alert('Please wait until timer completes!');
                 return;
             }
@@ -296,9 +424,39 @@
             localStorage.setItem('userData', JSON.stringify(userData));
             
             updateUI();
-            startTimer(); // Restart timer after claim
+            startTimer(); // Restart timer
             
             alert(`Claimed ${levelRewards[userData.level]} points!`);
+        }
+        
+        // Upgrade level
+        function upgradeLevel(targetLevel) {
+            const cost = levelCosts[targetLevel];
+            
+            if (userData.level !== targetLevel - 1) {
+                alert(`You need to be at level ${targetLevel - 1} first!`);
+                return;
+            }
+            
+            if (userData.points < cost) {
+                alert(`You need ${cost - userData.points} more points!`);
+                return;
+            }
+            
+            userData.points -= cost;
+            userData.level = targetLevel;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            updateUI();
+            alert(`Upgraded to level ${targetLevel}!`);
+        }
+        
+        // Copy referral link
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Referral link copied!');
         }
     </script>
 </body>
