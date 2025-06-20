@@ -277,7 +277,7 @@
     <div class="nav-container">
         <div class="row text-center">
             <div class="col-3">
-                <button class="nav-btn active" onclick="showPage('home')">
+                <button class="nav-btn" onclick="showPage('home')">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </button>
@@ -334,6 +334,9 @@
         // INITIALIZATION
         // ========================
         document.addEventListener('DOMContentLoaded', async () => {
+            // Show home page immediately
+            showPage('home');
+            
             // Check for referral code in URL
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
@@ -343,9 +346,6 @@
             
             // Start the claim timer
             startTimer();
-            
-            // Show home page by default
-            showPage('home');
             
             // Enable real-time updates
             subscribeToUpdates();
@@ -365,6 +365,7 @@
 
                 if (existingUser) {
                     currentUser = existingUser;
+                    console.log("Existing user loaded:", currentUser);
                 } else {
                     // Create new user
                     const newUser = {
@@ -385,6 +386,7 @@
 
                     if (error) throw error;
                     currentUser = data;
+                    console.log("New user created:", currentUser);
                     
                     // Update referrer's stats if applicable
                     if (refCode) {
@@ -414,6 +416,7 @@
                         .from('users')
                         .update({ referrals: referrer.referrals + 1 })
                         .eq('id', referrer.id);
+                    console.log("Referral counted for:", refCode);
                 }
             } catch (error) {
                 console.error("Referral error:", error);
@@ -434,19 +437,23 @@
                 }
                 
                 const reward = levelRewards[currentUser.level];
-                currentUser.points += reward;
-                currentUser.last_claim = now;
                 
-                // Update in Supabase
-                const { error } = await supabase
+                // Update in Supabase first
+                const { data, error } = await supabase
                     .from('users')
                     .update({
-                        points: currentUser.points,
-                        last_claim: currentUser.last_claim
+                        points: currentUser.points + reward,
+                        last_claim: now
                     })
-                    .eq('id', currentUser.id);
+                    .eq('id', currentUser.id)
+                    .select()
+                    .single();
                 
                 if (error) throw error;
+                
+                // Then update local state
+                currentUser = data;
+                console.log("Points claimed:", reward, "New balance:", currentUser.points);
                 
                 updateUI();
                 startTimer();
@@ -465,6 +472,7 @@
         async function awardReferralBonus(referrerCode, amount) {
             try {
                 const bonus = Math.floor(amount * 0.1); // 10% bonus
+                console.log("Awarding referral bonus:", bonus, "to", referrerCode);
                 
                 // Get referrer's current points
                 const { data: referrer, error } = await supabase
@@ -498,19 +506,22 @@
                     return;
                 }
                 
-                currentUser.points -= cost;
-                currentUser.level = targetLevel;
-                
-                // Update in Supabase
-                const { error } = await supabase
+                // Update in Supabase first
+                const { data, error } = await supabase
                     .from('users')
                     .update({
-                        points: currentUser.points,
-                        level: currentUser.level
+                        points: currentUser.points - cost,
+                        level: targetLevel
                     })
-                    .eq('id', currentUser.id);
+                    .eq('id', currentUser.id)
+                    .select()
+                    .single();
                 
                 if (error) throw error;
+                
+                // Then update local state
+                currentUser = data;
+                console.log("Upgraded to level:", targetLevel, "Remaining points:", currentUser.points);
                 
                 updateUI();
                 alert(`Upgraded to level ${targetLevel}!`);
@@ -524,22 +535,29 @@
         // UI FUNCTIONS
         // ========================
         function showPage(pageId) {
+            console.log("Showing page:", pageId);
+            
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.style.display = 'none';
             });
             
             // Show selected page
-            document.getElementById(pageId).style.display = 'block';
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.style.display = 'block';
+            }
             
             // Update active nav button
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
+                if (btn.getAttribute('onclick')?.includes(pageId)) {
+                    btn.classList.add('active');
+                }
             });
-            event.currentTarget.classList.add('active');
             
             // Special handling for referral page
-            if (pageId === 'referral') {
+            if (pageId === 'referral' && currentUser.referral_code) {
                 document.getElementById('referralLink').value = 
                     `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`;
                 document.getElementById('totalReferrals').textContent = currentUser.referrals;
@@ -548,6 +566,8 @@
         }
 
         function updateUI() {
+            console.log("Updating UI with:", currentUser);
+            
             // Update points display
             document.getElementById('pointsDisplay').textContent = currentUser.points.toLocaleString();
             
@@ -567,6 +587,7 @@
         }
 
         function startTimer() {
+            console.log("Starting timer...");
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
             
@@ -616,7 +637,7 @@
                     table: 'users',
                     filter: `id=eq.${currentUser.id}`
                 }, payload => {
-                    // Update local user data when Supabase changes
+                    console.log("Update received:", payload);
                     currentUser = payload.new;
                     updateUI();
                 })
