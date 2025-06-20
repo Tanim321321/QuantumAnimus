@@ -22,7 +22,6 @@
             min-height: calc(100vh - 70px);
         }
         
-        /* Navigation Bar (Bottom) */
         .nav-container {
             position: fixed;
             bottom: 0;
@@ -64,7 +63,6 @@
             color: #10b981;
         }
         
-        /* Claim Button */
         #claimBtn {
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             border: none;
@@ -82,7 +80,6 @@
             box-shadow: none;
         }
         
-        /* Timer Box */
         #timer {
             font-size: 1.3rem;
             font-weight: bold;
@@ -94,7 +91,6 @@
             border: 1px solid rgba(56, 189, 248, 0.3);
         }
         
-        /* Cards */
         .status-card {
             background: rgba(30, 41, 59, 0.7);
             border-radius: 16px;
@@ -132,7 +128,6 @@
             color: #10b981;
         }
         
-        /* Task Page Styles */
         .task-card {
             background: rgba(30, 41, 59, 0.7);
             border-radius: 16px;
@@ -221,7 +216,7 @@
             <div class="task-card">
                 <h4 class="text-center"><i class="fas fa-link me-2"></i>Your Referral Link</h4>
                 <div class="input-group mb-3">
-                    <input type="text" id="referralLink" class="form-control" value="https://t.me/YourBot?ref=12345" readonly>
+                    <input type="text" id="referralLink" class="form-control" value="Loading..." readonly>
                     <button class="btn btn-success" onclick="copyReferralLink()">Copy</button>
                 </div>
                 <p class="text-center">Earn 10% of your referrals' earnings!</p>
@@ -229,8 +224,8 @@
             
             <div class="task-card">
                 <h4 class="text-center"><i class="fas fa-chart-bar me-2"></i>Your Stats</h4>
-                <p>Total Referrals: <strong>0</strong></p>
-                <p>Earned Points: <strong>0</strong></p>
+                <p>Total Referrals: <strong id="totalReferrals">0</strong></p>
+                <p>Earned Points: <strong id="earnedPoints">0</strong></p>
             </div>
         </div>
     </div>
@@ -309,71 +304,268 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // User data with localStorage
-        let userData = JSON.parse(localStorage.getItem('userData')) || {
+        // ========================
+        // SUPABASE CONFIGURATION
+        // ========================
+        const SUPABASE_URL = 'https://ibjigvfbqdeyortbctra.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ========================
+        // APP STATE
+        // ========================
+        let currentUser = {
+            id: null,
+            telegram_id: '',
             points: 0,
             level: 0,
-            lastClaim: 0,
-            miningSpeed: 100
+            last_claim: 0,
+            referrals: 0,
+            referral_code: '',
+            referred_by: null
         };
-        
-        // Level costs
+
         const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
-        
-        // Level rewards
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            showPage('home');
-            updateUI();
+
+        // ========================
+        // INITIALIZATION
+        // ========================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check for referral code in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            
+            // Initialize user (demo mode - replace with actual Telegram ID)
+            await initUser('demo_user_123', refCode);
+            
+            // Start the claim timer
             startTimer();
+            
+            // Show home page by default
+            showPage('home');
+            
+            // Enable real-time updates
+            subscribeToUpdates();
         });
-        
-        // Show page
+
+        // ========================
+        // USER MANAGEMENT
+        // ========================
+        async function initUser(telegramId, refCode = null) {
+            try {
+                // Check if user exists
+                const { data: existingUser, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('telegram_id', telegramId)
+                    .single();
+
+                if (existingUser) {
+                    currentUser = existingUser;
+                } else {
+                    // Create new user
+                    const newUser = {
+                        telegram_id: telegramId,
+                        points: 0,
+                        level: 0,
+                        last_claim: 0,
+                        referrals: 0,
+                        referral_code: generateReferralCode(),
+                        referred_by: refCode
+                    };
+                    
+                    const { data, error } = await supabase
+                        .from('users')
+                        .insert([newUser])
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+                    currentUser = data;
+                    
+                    // Update referrer's stats if applicable
+                    if (refCode) {
+                        await handleReferral(refCode);
+                    }
+                }
+                
+                updateUI();
+            } catch (error) {
+                console.error("Error initializing user:", error);
+                alert("Error loading user data. Please refresh.");
+            }
+        }
+
+        async function handleReferral(refCode) {
+            try {
+                // Find referrer
+                const { data: referrer, error } = await supabase
+                    .from('users')
+                    .select('id, referrals')
+                    .eq('referral_code', refCode)
+                    .single();
+                
+                if (referrer) {
+                    // Update referrer's count
+                    await supabase
+                        .from('users')
+                        .update({ referrals: referrer.referrals + 1 })
+                        .eq('id', referrer.id);
+                }
+            } catch (error) {
+                console.error("Referral error:", error);
+            }
+        }
+
+        // ========================
+        // CORE FUNCTIONS
+        // ========================
+        async function claimPoints() {
+            try {
+                const now = Math.floor(Date.now() / 1000);
+                const cooldown = 10800; // 3 hours in seconds
+                
+                if (currentUser.last_claim > 0 && (now - currentUser.last_claim) < cooldown) {
+                    alert("Please wait before claiming again!");
+                    return;
+                }
+                
+                const reward = levelRewards[currentUser.level];
+                currentUser.points += reward;
+                currentUser.last_claim = now;
+                
+                // Update in Supabase
+                const { error } = await supabase
+                    .from('users')
+                    .update({
+                        points: currentUser.points,
+                        last_claim: currentUser.last_claim
+                    })
+                    .eq('id', currentUser.id);
+                
+                if (error) throw error;
+                
+                updateUI();
+                startTimer();
+                alert(`Successfully claimed ${reward} points!`);
+                
+                // Handle referral bonus if applicable
+                if (currentUser.referred_by) {
+                    await awardReferralBonus(currentUser.referred_by, reward);
+                }
+            } catch (error) {
+                console.error("Claim error:", error);
+                alert("Error claiming points. Please try again.");
+            }
+        }
+
+        async function awardReferralBonus(referrerCode, amount) {
+            try {
+                const bonus = Math.floor(amount * 0.1); // 10% bonus
+                
+                // Get referrer's current points
+                const { data: referrer, error } = await supabase
+                    .from('users')
+                    .select('points')
+                    .eq('referral_code', referrerCode)
+                    .single();
+                
+                if (referrer) {
+                    // Award bonus
+                    await supabase
+                        .from('users')
+                        .update({ points: referrer.points + bonus })
+                        .eq('referral_code', referrerCode);
+                }
+            } catch (error) {
+                console.error("Referral bonus error:", error);
+            }
+        }
+
+        async function upgradeLevel(targetLevel) {
+            try {
+                if (currentUser.level !== targetLevel - 1) {
+                    alert(`Please upgrade to level ${targetLevel - 1} first!`);
+                    return;
+                }
+                
+                const cost = levelCosts[targetLevel];
+                if (currentUser.points < cost) {
+                    alert(`You need ${cost - currentUser.points} more points!`);
+                    return;
+                }
+                
+                currentUser.points -= cost;
+                currentUser.level = targetLevel;
+                
+                // Update in Supabase
+                const { error } = await supabase
+                    .from('users')
+                    .update({
+                        points: currentUser.points,
+                        level: currentUser.level
+                    })
+                    .eq('id', currentUser.id);
+                
+                if (error) throw error;
+                
+                updateUI();
+                alert(`Upgraded to level ${targetLevel}!`);
+            } catch (error) {
+                console.error("Upgrade error:", error);
+                alert("Error upgrading level. Please try again.");
+            }
+        }
+
+        // ========================
+        // UI FUNCTIONS
+        // ========================
         function showPage(pageId) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.style.display = 'none';
             });
+            
+            // Show selected page
             document.getElementById(pageId).style.display = 'block';
             
+            // Update active nav button
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
+            
+            // Special handling for referral page
+            if (pageId === 'referral') {
+                document.getElementById('referralLink').value = 
+                    `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`;
+                document.getElementById('totalReferrals').textContent = currentUser.referrals;
+                document.getElementById('earnedPoints').textContent = Math.floor(currentUser.points * 0.1);
+            }
         }
-        
-        // Update UI
+
         function updateUI() {
-            document.getElementById('pointsDisplay').textContent = userData.points.toLocaleString();
-            document.getElementById('currentLevel').textContent = userData.level;
-            document.getElementById('currentLevel2').textContent = userData.level;
-            document.getElementById('miningSpeed').textContent = levelRewards[userData.level];
+            // Update points display
+            document.getElementById('pointsDisplay').textContent = currentUser.points.toLocaleString();
             
-            // Update progress
-            const nextLevel = userData.level + 1;
+            // Update level info
+            document.getElementById('currentLevel').textContent = currentUser.level;
+            document.getElementById('currentLevel2').textContent = currentUser.level;
+            document.getElementById('miningSpeed').textContent = levelRewards[currentUser.level];
+            
+            // Update progress to next level
+            const nextLevel = currentUser.level + 1;
             if (nextLevel <= 4) {
-                const neededPoints = levelCosts[nextLevel];
-                const progress = (userData.points / neededPoints) * 100;
-                document.getElementById('levelProgress').style.width = `${Math.min(100, progress)}%`;
-                document.getElementById('pointsToNext').textContent = (neededPoints - userData.points).toLocaleString();
-            }
-            
-            // Update claim button
-            const claimBtn = document.getElementById('claimBtn');
-            const currentTime = Math.floor(Date.now() / 1000);
-            const timeDiff = currentTime - userData.lastClaim;
-            
-            if (userData.lastClaim === 0 || timeDiff >= 10800) {
-                claimBtn.disabled = false;
-                claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[userData.level]} POINTS`;
-            } else {
-                claimBtn.disabled = true;
+                const needed = levelCosts[nextLevel];
+                const progress = Math.min(100, (currentUser.points / needed) * 100);
+                document.getElementById('levelProgress').style.width = `${progress}%`;
+                document.getElementById('pointsToNext').textContent = (needed - currentUser.points).toLocaleString();
             }
         }
-        
-        // Fixed Timer Function
+
         function startTimer() {
             const timerElement = document.getElementById('timer');
             const claimBtn = document.getElementById('claimBtn');
@@ -383,80 +575,56 @@
                 clearInterval(window.timerInterval);
             }
             
-            const updateTimerDisplay = () => {
+            function updateTimer() {
                 const now = Math.floor(Date.now() / 1000);
-                const lastClaimTime = userData.lastClaim || 0;
-                const elapsed = now - lastClaimTime;
-                const remaining = Math.max(0, 10800 - elapsed);
+                const lastClaim = currentUser.last_claim || 0;
+                const elapsed = now - lastClaim;
+                const remaining = Math.max(0, 10800 - elapsed); // 3 hours cooldown
                 
                 if (remaining <= 0) {
                     timerElement.textContent = "Ready to claim!";
                     claimBtn.disabled = false;
+                    claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM ${levelRewards[currentUser.level]} POINTS`;
                     clearInterval(window.timerInterval);
-                    return;
+                } else {
+                    const hours = Math.floor(remaining / 3600).toString().padStart(2, '0');
+                    const mins = Math.floor((remaining % 3600) / 60).toString().padStart(2, '0');
+                    const secs = Math.floor(remaining % 60).toString().padStart(2, '0');
+                    timerElement.textContent = `Next claim in: ${hours}:${mins}:${secs}`;
+                    claimBtn.disabled = true;
                 }
-                
-                const hours = Math.floor(remaining / 3600);
-                const minutes = Math.floor((remaining % 3600) / 60);
-                const seconds = remaining % 60;
-                
-                timerElement.textContent = `Next claim in: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            };
-            
-            // Run immediately
-            updateTimerDisplay();
-            
-            // Update every second
-            window.timerInterval = setInterval(updateTimerDisplay, 1000);
-        }
-        
-        // Claim points
-        function claimPoints() {
-            const currentTime = Math.floor(Date.now() / 1000);
-            
-            if (userData.lastClaim !== 0 && (currentTime - userData.lastClaim) < 10800) {
-                alert('Please wait until timer completes!');
-                return;
             }
             
-            userData.points += levelRewards[userData.level];
-            userData.lastClaim = currentTime;
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            updateUI();
-            startTimer(); // Restart timer
-            
-            alert(`Claimed ${levelRewards[userData.level]} points!`);
+            // Run immediately and every second
+            updateTimer();
+            window.timerInterval = setInterval(updateTimer, 1000);
         }
-        
-        // Upgrade level
-        function upgradeLevel(targetLevel) {
-            const cost = levelCosts[targetLevel];
-            
-            if (userData.level !== targetLevel - 1) {
-                alert(`You need to be at level ${targetLevel - 1} first!`);
-                return;
-            }
-            
-            if (userData.points < cost) {
-                alert(`You need ${cost - userData.points} more points!`);
-                return;
-            }
-            
-            userData.points -= cost;
-            userData.level = targetLevel;
-            localStorage.setItem('userData', JSON.stringify(userData));
-            
-            updateUI();
-            alert(`Upgraded to level ${targetLevel}!`);
-        }
-        
-        // Copy referral link
+
         function copyReferralLink() {
             const linkInput = document.getElementById('referralLink');
             linkInput.select();
             document.execCommand('copy');
-            alert('Referral link copied!');
+            alert('Referral link copied to clipboard!');
+        }
+
+        function subscribeToUpdates() {
+            supabase
+                .channel('user_updates')
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'users',
+                    filter: `id=eq.${currentUser.id}`
+                }, payload => {
+                    // Update local user data when Supabase changes
+                    currentUser = payload.new;
+                    updateUI();
+                })
+                .subscribe();
+        }
+
+        function generateReferralCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
         }
     </script>
 </body>
