@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mining Bot</title>
+    <title>Quantum Mining Bot</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,6 +13,7 @@
             --text-color: #ffffff;
             --accent-color: #38bdf8;
             --success-color: #10b981;
+            --quantum-color: #8b5cf6;
         }
         
         body {
@@ -22,6 +23,7 @@
             background: var(--primary-bg);
             background-attachment: fixed;
             padding-bottom: 70px;
+            overflow-x: hidden;
         }
         
         .page {
@@ -74,18 +76,18 @@
         }
         
         .nav-btn.active {
-            color: var(--success-color);
+            color: var(--quantum-color);
         }
         
         .btn-primary-custom {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(135deg, var(--quantum-color), #3b82f6);
             border: none;
             font-weight: bold;
             padding: 18px 30px;
             font-size: 1.2rem;
             border-radius: 16px;
             margin: 25px 0 15px;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
             transition: all 0.3s;
             color: white;
         }
@@ -108,11 +110,11 @@
         .points-display {
             font-size: 3.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+            background: linear-gradient(135deg, var(--quantum-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 10px 0;
-            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+            text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
         }
         
         .stat-box {
@@ -143,7 +145,7 @@
         }
         
         .progress-bar-custom {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(90deg, var(--quantum-color), #3b82f6);
         }
         
         #timer {
@@ -154,7 +156,50 @@
             border-radius: 12px;
             margin: 15px auto;
             display: inline-block;
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        .bot-banner {
+            background: linear-gradient(90deg, #1e293b, #0f172a);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--quantum-color);
+            text-align: center;
+        }
+        
+        .bot-icon {
+            font-size: 3rem;
+            color: var(--quantum-color);
+            margin-bottom: 15px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .quantum-text {
+            color: var(--quantum-color);
+            font-weight: bold;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--quantum-color);
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -162,16 +207,30 @@
     <!-- Loading Screen -->
     <div id="loading" style="position:fixed; top:0; left:0; right:0; bottom:0; background:var(--primary-bg); display:flex; justify-content:center; align-items:center; z-index:9999;">
         <div class="text-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <div class="spinner-border quantum-text" style="width: 3rem; height: 3rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <h3 class="mt-3">Loading Mining App...</h3>
+            <h3 class="mt-3 quantum-text">Connecting to Quantum Network...</h3>
         </div>
     </div>
 
     <!-- Home Page -->
     <div id="home" class="page">
         <div class="container text-center py-3">
+            <div class="header-logo">
+                <i class="fas fa-atom logo-icon"></i>
+                <h1>Quantum Mining</h1>
+            </div>
+            
+            <div class="bot-banner">
+                <i class="fab fa-telegram bot-icon pulse"></i>
+                <h3>Telegram Mining Bot</h3>
+                <p>Connect with our Quantum Bot to start earning</p>
+                <a href="https://t.me/quantum_animous_bot" target="_blank" class="btn btn-primary-custom">
+                    <i class="fab fa-telegram me-2"></i>Connect to @quantum_animous_bot
+                </a>
+            </div>
+            
             <div class="status-card">
                 <div class="d-flex justify-content-around mb-4">
                     <div class="stat-box">
@@ -222,19 +281,22 @@
     <!-- Task Page -->
     <div id="task" class="page">
         <div class="container py-3">
-            <h1 class="text-center mb-4"><i class="fas fa-tasks me-2"></i>Daily Tasks</h1>
+            <div class="header-logo">
+                <i class="fas fa-tasks logo-icon"></i>
+                <h1>Daily Tasks</h1>
+            </div>
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h4 class="mb-1"><i class="fab fa-telegram me-2"></i>Join Telegram Group</h4>
+                        <h4 class="mb-1"><i class="fab fa-telegram me-2 quantum-text"></i>Join Telegram Group</h4>
                         <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
                     </div>
                     <button class="btn btn-success btn-sm" onclick="verifyTask('telegram_group')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
-                <a href="https://t.me/your_group" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
+                <a href="https://t.me/quantum_mining_group" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
                     <i class="fab fa-telegram me-1"></i> Join Now
                 </a>
             </div>
@@ -242,22 +304,22 @@
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h4 class="mb-1"><i class="fab fa-twitter me-2"></i>Follow on Twitter</h4>
+                        <h4 class="mb-1"><i class="fab fa-twitter me-2 quantum-text"></i>Follow on Twitter</h4>
                         <p class="mb-0 text-muted">Get 200 points for following us</p>
                     </div>
                     <button class="btn btn-success btn-sm" onclick="verifyTask('twitter_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
-                <button class="btn btn-info btn-sm w-100 mt-2">
+                <a href="https://twitter.com/quantum_mining" target="_blank" class="btn btn-info btn-sm w-100 mt-2">
                     <i class="fab fa-twitter me-1"></i> Follow
-                </button>
+                </a>
             </div>
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h4 class="mb-1"><i class="fas fa-share-alt me-2"></i>Share with Friends</h4>
+                        <h4 class="mb-1"><i class="fas fa-share-alt me-2 quantum-text"></i>Share Quantum Bot</h4>
                         <p class="mb-0 text-muted">Get 500 points for sharing</p>
                     </div>
                     <button class="btn btn-success btn-sm" onclick="verifyTask('share')">
@@ -265,7 +327,7 @@
                     </button>
                 </div>
                 <button class="btn btn-warning btn-sm w-100 mt-2" onclick="shareApp()">
-                    <i class="fas fa-share-alt me-1"></i> Share Now
+                    <i class="fas fa-share-alt me-1"></i> Share Bot Now
                 </button>
             </div>
         </div>
@@ -274,10 +336,13 @@
     <!-- Referral Page -->
     <div id="referral" class="page">
         <div class="container py-3">
-            <h1 class="text-center mb-4"><i class="fas fa-users me-2"></i>Referral Program</h1>
+            <div class="header-logo">
+                <i class="fas fa-users logo-icon"></i>
+                <h1>Referral Program</h1>
+            </div>
             
             <div class="task-card text-center">
-                <h4><i class="fas fa-link me-2"></i>Your Referral Link</h4>
+                <h4><i class="fas fa-link me-2 quantum-text"></i>Your Referral Link</h4>
                 <div class="input-group mb-3">
                     <input type="text" id="referralLink" class="form-control" value="Loading..." readonly>
                     <button class="btn btn-success" onclick="copyReferralLink()">
@@ -285,11 +350,11 @@
                     </button>
                 </div>
                 <p class="mb-2">Earn 10% of your referrals' earnings!</p>
-                <small class="text-muted">Share your link and invite friends</small>
+                <small class="text-muted">Share your link and invite friends to join via Telegram</small>
             </div>
             
             <div class="task-card">
-                <h4 class="text-center mb-3"><i class="fas fa-chart-bar me-2"></i>Your Stats</h4>
+                <h4 class="text-center mb-3"><i class="fas fa-chart-bar me-2 quantum-text"></i>Your Stats</h4>
                 <div class="row text-center">
                     <div class="col-6">
                         <div class="stat-box">
@@ -307,7 +372,7 @@
             </div>
             
             <div class="task-card">
-                <h4><i class="fas fa-trophy me-2"></i>Referral Leaderboard</h4>
+                <h4><i class="fas fa-trophy me-2 quantum-text"></i>Referral Leaderboard</h4>
                 <div class="table-responsive">
                     <table class="table table-dark table-hover">
                         <thead>
@@ -315,6 +380,7 @@
                                 <th>Rank</th>
                                 <th>User</th>
                                 <th>Referrals</th>
+                                <th>Earnings</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboardBody">
@@ -322,6 +388,7 @@
                                 <td>1</td>
                                 <td>You</td>
                                 <td id="yourReferrals">0</td>
+                                <td id="yourEarnings">0</td>
                             </tr>
                             <!-- More rows will be added dynamically -->
                         </tbody>
@@ -334,10 +401,13 @@
     <!-- Upgrade Page -->
     <div id="upgrade" class="page">
         <div class="container py-3">
-            <h1 class="text-center mb-4"><i class="fas fa-level-up-alt me-2"></i>Upgrade Level</h1>
+            <div class="header-logo">
+                <i class="fas fa-level-up-alt logo-icon"></i>
+                <h1>Upgrade Level</h1>
+            </div>
             
             <div class="task-card">
-                <h4><i class="fas fa-layer-group me-2"></i>Current Level: <span id="currentLevel2">0</span></h4>
+                <h4><i class="fas fa-layer-group me-2 quantum-text"></i>Current Level: <span id="currentLevel2">0</span></h4>
                 <div class="progress mt-2" style="height: 10px;">
                     <div id="levelProgress" class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%"></div>
                 </div>
@@ -346,7 +416,7 @@
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>Level 0 → Level 1</h4>
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2 quantum-text"></i>Level 0 → Level 1</h4>
                     <span class="badge bg-primary">5,000 points</span>
                 </div>
                 <ul class="list-group list-group-flush mb-3">
@@ -358,7 +428,7 @@
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>Level 1 → Level 2</h4>
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2 quantum-text"></i>Level 1 → Level 2</h4>
                     <span class="badge bg-primary">8,000 points</span>
                 </div>
                 <ul class="list-group list-group-flush mb-3">
@@ -370,7 +440,7 @@
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>Level 2 → Level 3</h4>
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2 quantum-text"></i>Level 2 → Level 3</h4>
                     <span class="badge bg-primary">12,000 points</span>
                 </div>
                 <ul class="list-group list-group-flush mb-3">
@@ -382,7 +452,7 @@
             
             <div class="task-card">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h4 class="mb-0"><i class="fas fa-crown me-2"></i>Level 3 → VIP Level</h4>
+                    <h4 class="mb-0"><i class="fas fa-crown me-2 quantum-text"></i>Level 3 → VIP Level</h4>
                     <span class="badge bg-primary">15,000 points</span>
                 </div>
                 <ul class="list-group list-group-flush mb-3">
@@ -454,10 +524,10 @@
             const refCode = urlParams.get('ref');
             
             // Generate a persistent user ID
-            let userId = localStorage.getItem('qerionUserId');
+            let userId = localStorage.getItem('quantumUserId');
             if (!userId) {
                 userId = 'user_' + Math.floor(Math.random() * 10000);
-                localStorage.setItem('qerionUserId', userId);
+                localStorage.setItem('quantumUserId', userId);
             }
             
             // Initialize user
@@ -490,7 +560,7 @@
         async function initUser(userId, refCode = null) {
             try {
                 // Check if we have saved user data
-                const storageKey = 'qerionUser_' + userId;
+                const storageKey = 'quantumUser_' + userId;
                 const savedData = localStorage.getItem(storageKey);
                 
                 if (savedData) {
@@ -515,9 +585,9 @@
                 
                 updateUI();
                 
-                // Set referral link
+                // Set referral link to open the Telegram bot
                 document.getElementById('referralLink').value = 
-                    `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`;
+                    `https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`;
                 
                 // Simulate loading from database
                 return new Promise(resolve => setTimeout(resolve, 500));
@@ -622,7 +692,7 @@
                 currentUser.last_claim = now;
                 
                 // Save to localStorage
-                const storageKey = 'qerionUser_' + currentUser.id;
+                const storageKey = 'quantumUser_' + currentUser.id;
                 localStorage.setItem(storageKey, JSON.stringify(currentUser));
                 
                 updateUI();
@@ -659,7 +729,7 @@
                 currentUser.level = targetLevel;
                 
                 // Save to localStorage
-                const storageKey = 'qerionUser_' + currentUser.id;
+                const storageKey = 'quantumUser_' + currentUser.id;
                 localStorage.setItem(storageKey, JSON.stringify(currentUser));
                 
                 updateUI();
@@ -690,17 +760,45 @@
             setTimeout(() => {
                 copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
             }, 2000);
+            
+            alert("Referral link copied to clipboard! Share it with your friends.");
         }
         
         function verifyTask(taskType) {
             // In a real app, you would verify with Telegram API
             alert(`Task verification for ${taskType} would happen here with Telegram API`);
+            
+            // Simulate adding points for task completion
+            let points = 0;
+            switch(taskType) {
+                case 'telegram_group': points = 300; break;
+                case 'twitter_follow': points = 200; break;
+                case 'share': points = 500; break;
+            }
+            
+            currentUser.points += points;
+            updateUI();
+            
+            const storageKey = 'quantumUser_' + currentUser.id;
+            localStorage.setItem(storageKey, JSON.stringify(currentUser));
         }
         
         function shareApp() {
-            // In a real app, use Telegram share functionality
-            const shareText = `Join this awesome mining app and earn coins! ${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`;
-            alert(`Share this link: ${shareText}`);
+            // Share the Telegram bot link
+            const shareText = `Join the Quantum Mining Bot on Telegram and start earning coins! Use my referral link: https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Quantum Mining Bot',
+                    text: 'Join this awesome mining bot on Telegram!',
+                    url: `https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`
+                })
+                .then(() => console.log('Successful share'))
+                .catch(error => console.log('Error sharing:', error));
+            } else {
+                // Fallback for desktop
+                alert(`Share this link: ${shareText}`);
+            }
         }
         
         function loadLeaderboard() {
@@ -708,16 +806,29 @@
             setTimeout(() => {
                 const leaderboardBody = document.getElementById('leaderboardBody');
                 
+                // Clear existing rows except the first one (which is the current user)
+                while (leaderboardBody.children.length > 1) {
+                    leaderboardBody.removeChild(leaderboardBody.lastChild);
+                }
+                
                 // Add some dummy data
-                for (let i = 2; i <= 5; i++) {
+                for (let i = 2; i <= 10; i++) {
+                    const referrals = Math.floor(Math.random() * 20);
+                    const earnings = Math.floor(referrals * 50);
+                    
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${i}</td>
-                        <td>User${Math.floor(Math.random() * 1000)}</td>
-                        <td>${Math.floor(Math.random() * 20)}</td>
+                        <td>QuantumUser${Math.floor(Math.random() * 1000)}</td>
+                        <td>${referrals}</td>
+                        <td>${earnings.toLocaleString()}</td>
                     `;
                     leaderboardBody.appendChild(row);
                 }
+                
+                // Update current user's row
+                document.getElementById('yourReferrals').textContent = currentUser.referrals;
+                document.getElementById('yourEarnings').textContent = (currentUser.referrals * 50).toLocaleString();
             }, 1000);
         }
         
