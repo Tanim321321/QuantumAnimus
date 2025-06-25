@@ -453,8 +453,15 @@
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
             
-            // Initialize user (in a real app, use Telegram WebApp.initData)
-            await initUser('user_' + Math.floor(Math.random() * 10000), refCode);
+            // Generate a persistent user ID
+            let userId = localStorage.getItem('qerionUserId');
+            if (!userId) {
+                userId = 'user_' + Math.floor(Math.random() * 10000);
+                localStorage.setItem('qerionUserId', userId);
+            }
+            
+            // Initialize user
+            await initUser(userId, refCode);
             
             // Start the claim timer
             startTimer();
@@ -482,27 +489,29 @@
         
         async function initUser(userId, refCode = null) {
             try {
-                // In a real app, you would connect to your backend here
-                // This is a simulation for demo purposes
+                // Check if we have saved user data
+                const storageKey = 'qerionUser_' + userId;
+                const savedData = localStorage.getItem(storageKey);
                 
-                currentUser = {
-                    id: 'demo_' + userId,
-                    username: userId,
-                    points: 1500,  // Starting balance for demo
-                    level: 0,
-                    last_claim: 0,
-                    referrals: Math.floor(Math.random() * 10),
-                    referral_code: generateReferralCode(),
-                    referred_by: refCode || null
-                
-        // Load from localStorage if exists
-        const savedData = localStorage.getItem('qerionUser_' + userId);
-        if (savedData) {
-            currentUser = JSON.parse(savedData);
-        } else {
-            localStorage.setItem('qerionUser_' + userId, JSON.stringify(currentUser));
-        }
-    };
+                if (savedData) {
+                    // Load existing user data
+                    currentUser = JSON.parse(savedData);
+                } else {
+                    // Create new user
+                    currentUser = {
+                        id: userId,
+                        username: userId,
+                        points: 1500,  // Starting balance for demo
+                        level: 0,
+                        last_claim: 0,
+                        referrals: Math.floor(Math.random() * 10),
+                        referral_code: generateReferralCode(),
+                        referred_by: refCode || null
+                    };
+                    
+                    // Save new user to localStorage
+                    localStorage.setItem(storageKey, JSON.stringify(currentUser));
+                }
                 
                 updateUI();
                 
@@ -611,7 +620,10 @@
                 const reward = levelRewards[currentUser.level];
                 currentUser.points += reward;
                 currentUser.last_claim = now;
-                localStorage.setItem('qerionUser_' + currentUser.username, JSON.stringify(currentUser));
+                
+                // Save to localStorage
+                const storageKey = 'qerionUser_' + currentUser.id;
+                localStorage.setItem(storageKey, JSON.stringify(currentUser));
                 
                 updateUI();
                 startTimer();
@@ -624,8 +636,6 @@
                     claimBtn.innerHTML = `<i class="fas fa-gem me-2"></i>CLAIM POINTS`;
                     claimBtn.classList.remove('btn-success');
                 }, 2000);
-                
-                // In a real app, you would save to database here
             } catch (error) {
                 console.error("Claim error:", error);
                 alert("Error claiming points. Please try again.");
@@ -647,7 +657,10 @@
                 
                 currentUser.points -= cost;
                 currentUser.level = targetLevel;
-                localStorage.setItem('qerionUser_' + currentUser.username, JSON.stringify(currentUser));
+                
+                // Save to localStorage
+                const storageKey = 'qerionUser_' + currentUser.id;
+                localStorage.setItem(storageKey, JSON.stringify(currentUser));
                 
                 updateUI();
                 
@@ -660,8 +673,6 @@
                 }, 2000);
                 
                 alert(`Congratulations! Upgraded to level ${targetLevel}!`);
-                
-                // In a real app, you would save to database here
             } catch (error) {
                 console.error("Upgrade error:", error);
                 alert("Error upgrading level. Please try again.");
