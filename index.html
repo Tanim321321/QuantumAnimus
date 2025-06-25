@@ -494,7 +494,15 @@
                     referrals: Math.floor(Math.random() * 10),
                     referral_code: generateReferralCode(),
                     referred_by: refCode || null
-                };
+                
+        // Load from localStorage if exists
+        const savedData = localStorage.getItem('qerionUser_' + userId);
+        if (savedData) {
+            currentUser = JSON.parse(savedData);
+        } else {
+            localStorage.setItem('qerionUser_' + userId, JSON.stringify(currentUser));
+        }
+    };
                 
                 updateUI();
                 
@@ -603,6 +611,7 @@
                 const reward = levelRewards[currentUser.level];
                 currentUser.points += reward;
                 currentUser.last_claim = now;
+                localStorage.setItem('qerionUser_' + currentUser.username, JSON.stringify(currentUser));
                 
                 updateUI();
                 startTimer();
@@ -638,6 +647,7 @@
                 
                 currentUser.points -= cost;
                 currentUser.level = targetLevel;
+                localStorage.setItem('qerionUser_' + currentUser.username, JSON.stringify(currentUser));
                 
                 updateUI();
                 
