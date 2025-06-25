@@ -1,14 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env
-load_dotenv()
+# Get the BOT token from Render's Environment Variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-# Print to confirm token loaded (you can remove after testing)
-print("LOADED BOT TOKEN:", BOT_TOKEN)
 
 # /start command handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -22,7 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Start the bot
 def main():
     if not BOT_TOKEN:
-        print("❌ BOT_TOKEN is missing. Please check your .env or Railway environment variables.")
+        print("❌ BOT_TOKEN is missing. Please set it in Render's environment variables.")
         return
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
