@@ -7,23 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ADDED: Fix for navigation bar visibility */
-        body {
-            padding-bottom: 90px; /* Increased padding to make space for nav */
-        }
-        
-        .nav-container {
-            height: 70px; /* Fixed height for nav */
-        }
-        
-        /* ADDED: Content container with scroll */
-        .content-container {
-            max-height: calc(100vh - 70px);
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
-
-        /* Existing styles remain unchanged */
         :root {
             --primary-bg: linear-gradient(135deg, #0f172a, #1e293b);
             --card-bg: rgba(30, 41, 59, 0.7);
@@ -39,10 +22,12 @@
             min-height: 100vh;
             background: var(--primary-bg);
             background-attachment: fixed;
+            padding-bottom: 70px;
         }
         
         .page {
             display: none;
+            padding: 15px;
             min-height: calc(100vh - 70px);
             animation: fadeIn 0.5s ease;
         }
@@ -200,56 +185,53 @@
 
     <!-- Home Page -->
     <div id="home" class="page">
-        <!-- ADDED: Content container for proper scrolling -->
-        <div class="content-container">
-            <div class="container text-center py-3">
-                <div class="header-logo">
-                    <i class="fas fa-atom logo-icon"></i>
-                    <h1>Quantum Mining</h1>
-                </div>
-                
-                <div class="status-card">
-                    <div class="d-flex justify-content-around mb-4">
-                        <div class="stat-box">
-                            <div>Level</div>
-                            <div class="stat-value" id="currentLevel">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div>Mining Rate</div>
-                            <div class="stat-value" id="miningSpeed">100</div>
-                            <small>coins/3h</small>
-                        </div>
+        <div class="container text-center py-3">
+            <div class="header-logo">
+                <i class="fas fa-atom logo-icon"></i>
+                <h1>Quantum Mining</h1>
+            </div>
+            
+            <div class="status-card">
+                <div class="d-flex justify-content-around mb-4">
+                    <div class="stat-box">
+                        <div>Level</div>
+                        <div class="stat-value" id="currentLevel">0</div>
                     </div>
-                    
-                    <h3 class="mb-3">YOUR BALANCE</h3>
-                    <div class="points-display" id="pointsDisplay">0</div>
-                    <p>Total Points</p>
-                    
-                    <button id="claimBtn" class="btn btn-primary-custom w-100" onclick="claimPoints()">
-                        <i class="fas fa-gem me-2"></i>CLAIM POINTS
-                    </button>
-                    
-                    <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
+                    <div class="stat-box">
+                        <div>Mining Rate</div>
+                        <div class="stat-value" id="miningSpeed">100</div>
+                        <small>coins/3h</small>
+                    </div>
                 </div>
                 
-                <div class="status-card text-start">
-                    <h4><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Quick Actions</h4>
-                    <div class="row mt-3">
-                        <div class="col-6 mb-2">
-                            <button class="btn btn-sm btn-outline-primary w-100" onclick="showPage('upgrade')">
-                                <i class="fas fa-level-up-alt me-1"></i> Upgrade
-                            </button>
-                        </div>
-                        <div class="col-6 mb-2">
-                            <button class="btn btn-sm btn-outline-success w-100" onclick="showPage('referral')">
-                                <i class="fas fa-users me-1"></i> Referral
-                            </button>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-sm btn-outline-info w-100" onclick="showPage('task')">
-                                <i class="fas fa-tasks me-1"></i> Tasks
-                            </button>
-                        </div>
+                <h3 class="mb-3">YOUR BALANCE</h3>
+                <div class="points-display" id="pointsDisplay">0</div>
+                <p>Total Points</p>
+                
+                <button id="claimBtn" class="btn btn-primary-custom w-100" onclick="claimPoints()">
+                    <i class="fas fa-gem me-2"></i>CLAIM POINTS
+                </button>
+                
+                <div id="timer" class="mt-3">Next claim in: 03:00:00</div>
+            </div>
+            
+            <div class="status-card text-start">
+                <h4><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Quick Actions</h4>
+                <div class="row mt-3">
+                    <div class="col-6 mb-2">
+                        <button class="btn btn-sm btn-outline-primary w-100" onclick="showPage('upgrade')">
+                            <i class="fas fa-level-up-alt me-1"></i> Upgrade
+                        </button>
+                    </div>
+                    <div class="col-6 mb-2">
+                        <button class="btn btn-sm btn-outline-success w-100" onclick="showPage('referral')">
+                            <i class="fas fa-users me-1"></i> Referral
+                        </button>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-sm btn-outline-info w-100" onclick="showPage('task')">
+                            <i class="fas fa-tasks me-1"></i> Tasks
+                        </button>
                     </div>
                 </div>
             </div>
@@ -258,110 +240,202 @@
     
     <!-- Task Page -->
     <div id="task" class="page">
-        <!-- ADDED: Content container for proper scrolling -->
-        <div class="content-container">
-            <div class="container py-3">
-                <div class="header-logo">
-                    <i class="fas fa-tasks logo-icon"></i>
-                    <h1>Daily Tasks</h1>
-                </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-1"><i class="fab fa-telegram me-2" style="color: #8b5cf6;"></i>Join Telegram Group</h4>
-                            <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
-                        </div>
-                        <button class="btn btn-success btn-sm" onclick="verifyTask('telegram_group')">
-                            <i class="fas fa-check me-1"></i> Verify
-                        </button>
+        <div class="container py-3">
+            <div class="header-logo">
+                <i class="fas fa-tasks logo-icon"></i>
+                <h1>Daily Tasks</h1>
+            </div>
+            
+            <!-- YouTube Subscription Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-youtube me-2" style="color: #FF0000;"></i>Subscribe on YouTube</h4>
+                        <p class="mb-0 text-muted">Get 400 points for subscribing</p>
                     </div>
-                    <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
-                        <i class="fab fa-telegram me-1"></i> Join Now
-                    </a>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('youtube_sub')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
                 </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="mb-1"><i class="fab fa-twitter me-2" style="color: #8b5cf6;"></i>Follow us on Twitter</h4>
-                            <p class="mb-0 text-muted">Get 200 points for following Us</p>
-                        </div>
-                        <button class="btn btn-success btn-sm" onclick="verifyTask('twitter_follow')">
-                            <i class="fas fa-check me-1"></i> Verify
-                        </button>
+                <a href="https://www.youtube.com/channel/UC_quantum_mining" target="_blank" class="btn btn-danger btn-sm w-100 mt-2">
+                    <i class="fab fa-youtube me-1"></i> Subscribe Now
+                </a>
+            </div>
+            
+            <!-- TikTok Follow Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-tiktok me-2" style="color: #69C9D0;"></i>Follow on TikTok</h4>
+                        <p class="mb-0 text-muted">Get 350 points for following</p>
                     </div>
-                    <a href="https://twitter.com/tanim877" target="_blank" class="btn btn-info btn-sm w-100 mt-2">
-                        <i class="fab fa-twitter me-1"></i> Follow 
-                    </a>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('tiktok_follow')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
                 </div>
+                <a href="https://www.tiktok.com/@quantum_mining" target="_blank" class="btn btn-sm w-100 mt-2" style="background-color: #000; color: white;">
+                    <i class="fab fa-tiktok me-1"></i> Follow Now
+                </a>
+            </div>
+            
+            <!-- Instagram Follow Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-instagram me-2" style="color: #E1306C;"></i>Follow on Instagram</h4>
+                        <p class="mb-0 text-muted">Get 350 points for following</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('instagram_follow')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <a href="https://www.instagram.com/quantum_mining/" target="_blank" class="btn btn-sm w-100 mt-2" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white;">
+                    <i class="fab fa-instagram me-1"></i> Follow Now
+                </a>
+            </div>
+            
+            <!-- New Facebook Follow Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-facebook me-2" style="color: #1877F2;"></i>Follow on Facebook</h4>
+                        <p class="mb-0 text-muted">Get 300 points for following us</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('facebook_follow')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <a href="https://www.facebook.com/profile.php?id=61576635309991" target="_blank" class="btn btn-sm w-100 mt-2" style="background-color: #1877F2; color: white;">
+                    <i class="fab fa-facebook me-1"></i> Follow Now
+                </a>
+            </div>
+            
+            <!-- LinkedIn Follow Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-linkedin me-2" style="color: #0A66C2;"></i>Follow on LinkedIn</h4>
+                        <p class="mb-0 text-muted">Get 400 points for following</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('linkedin_follow')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <a href="https://www.linkedin.com/company/quantum-mining" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
+                    <i class="fab fa-linkedin me-1"></i> Follow Now
+                </a>
+            </div>
+            
+            <!-- Telegram Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-telegram me-2" style="color: #8b5cf6;"></i>Join Telegram Group</h4>
+                        <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('telegram_group')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
+                    <i class="fab fa-telegram me-1"></i> Join Now
+                </a>
+            </div>
+            
+            <!-- Twitter Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fab fa-twitter me-2" style="color: #8b5cf6;"></i>Follow @tanim877 on Twitter</h4>
+                        <p class="mb-0 text-muted">Get 200 points for following Us</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('twitter_follow')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <a href="https://twitter.com/tanim877" target="_blank" class="btn btn-info btn-sm w-100 mt-2">
+                    <i class="fab fa-twitter me-1"></i> Follow
+                </a>
+            </div>
+            
+            <!-- Share Task -->
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fas fa-share-alt me-2" style="color: #8b5cf6;"></i>Share Quantum Bot</h4>
+                        <p class="mb-0 text-muted">Get 500 points for sharing</p>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="verifyTask('share')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>
+                </div>
+                <button class="btn btn-warning btn-sm w-100 mt-2" onclick="shareApp()">
+                    <i class="fas fa-share-alt me-1"></i> Share Bot Now
+                </button>
             </div>
         </div>
     </div>
     
     <!-- Referral Page -->
     <div id="referral" class="page">
-        <!-- ADDED: Content container for proper scrolling -->
-        <div class="content-container">
-            <div class="container py-3">
-                <div class="header-logo">
-                    <i class="fas fa-users logo-icon"></i>
-                    <h1>Referral Program</h1>
+        <div class="container py-3">
+            <div class="header-logo">
+                <i class="fas fa-users logo-icon"></i>
+                <h1>Referral Program</h1>
+            </div>
+            
+            <div class="task-card text-center">
+                <h4><i class="fas fa-link me-2" style="color: #8b5cf6;"></i>Your Referral Link</h4>
+                <div class="input-group mb-3">
+                    <input type="text" id="referralLink" class="form-control" value="Loading..." readonly>
+                    <button class="btn btn-success" onclick="copyReferralLink()">
+                        <i class="fas fa-copy"></i>
+                    </button>
                 </div>
-                
-                <div class="task-card text-center">
-                    <h4><i class="fas fa-link me-2" style="color: #8b5cf6;"></i>Your Referral Link</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" id="referralLink" class="form-control" value="Loading..." readonly>
-                        <button class="btn btn-success" onclick="copyReferralLink()">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                    <p class="mb-2">Earn 10% of your referrals' earnings!</p>
-                    <small class="text-muted">Share your link and invite friends to join via Telegram</small>
-                </div>
-                
-                <div class="task-card">
-                    <h4 class="text-center mb-3"><i class="fas fa-chart-bar me-2" style="color: #8b5cf6;"></i>Your Stats</h4>
-                    <div class="row text-center">
-                        <div class="col-6">
-                            <div class="stat-box">
-                                <div>Total Referrals</div>
-                                <div class="stat-value" id="totalReferrals">0</div>
-                            </div>
+                <p class="mb-2">Earn 10% of your referrals' earnings!</p>
+                <small class="text-muted">Share your link and invite friends to join via Telegram</small>
+            </div>
+            
+            <div class="task-card">
+                <h4 class="text-center mb-3"><i class="fas fa-chart-bar me-2" style="color: #8b5cf6;"></i>Your Stats</h4>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="stat-box">
+                            <div>Total Referrals</div>
+                            <div class="stat-value" id="totalReferrals">0</div>
                         </div>
-                        <div class="col-6">
-                            <div class="stat-box">
-                                <div>Earned Points</div>
-                                <div class="stat-value" id="earnedPoints">0</div>
-                            </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-box">
+                            <div>Earned Points</div>
+                            <div class="stat-value" id="earnedPoints">0</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="task-card">
-                    <h4><i class="fas fa-trophy me-2" style="color: #8b5cf6;"></i>Referral Leaderboard</h4>
-                    <div class="table-responsive">
-                        <table class="table table-dark table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>User</th>
-                                    <th>Referrals</th>
-                                    <th>Earnings</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leaderboardBody">
-                                <tr>
-                                    <td>1</td>
-                                    <td>You</td>
-                                    <td id="yourReferrals">0</td>
-                                    <td id="yourEarnings">0</td>
-                                </tr>
-                                <!-- More rows will be added dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-trophy me-2" style="color: #8b5cf6;"></i>Referral Leaderboard</h4>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Referrals</th>
+                                <th>Earnings</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <tr>
+                                <td>1</td>
+                                <td>You</td>
+                                <td id="yourReferrals">0</td>
+                                <td id="yourEarnings">0</td>
+                            </tr>
+                            <!-- More rows will be added dynamically -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -369,69 +443,66 @@
     
     <!-- Upgrade Page -->
     <div id="upgrade" class="page">
-        <!-- ADDED: Content container for proper scrolling -->
-        <div class="content-container">
-            <div class="container py-3">
-                <div class="header-logo">
-                    <i class="fas fa-level-up-alt logo-icon"></i>
-                    <h1>Upgrade Level</h1>
+        <div class="container py-3">
+            <div class="header-logo">
+                <i class="fas fa-level-up-alt logo-icon"></i>
+                <h1>Upgrade Level</h1>
+            </div>
+            
+            <div class="task-card">
+                <h4><i class="fas fa-layer-group me-2" style="color: #8b5cf6;"></i>Current Level: <span id="currentLevel2">0</span></h4>
+                <div class="progress mt-2" style="height: 10px;">
+                    <div id="levelProgress" class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%"></div>
                 </div>
-                
-                <div class="task-card">
-                    <h4><i class="fas fa-layer-group me-2" style="color: #8b5cf6;"></i>Current Level: <span id="currentLevel2">0</span></h4>
-                    <div class="progress mt-2" style="height: 10px;">
-                        <div id="levelProgress" class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%"></div>
-                    </div>
-                    <p class="mt-2">Points needed for next level: <span id="pointsToNext">5000</span></p>
+                <p class="mt-2">Points needed for next level: <span id="pointsToNext">5000</span></p>
+            </div>
+            
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 0 → Level 1</h4>
+                    <span class="badge bg-primary">5,000 points</span>
                 </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 0 → Level 1</h4>
-                        <span class="badge bg-primary">5,000 points</span>
-                    </div>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 125 coins/3h</li>
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Higher withdrawal limits</li>
-                    </ul>
-                    <button class="btn btn-primary w-100" onclick="upgradeLevel(1)">Upgrade Now</button>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 125 coins/3h</li>
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Higher withdrawal limits</li>
+                </ul>
+                <button class="btn btn-primary w-100" onclick="upgradeLevel(1)">Upgrade Now</button>
+            </div>
+            
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 1 → Level 2</h4>
+                    <span class="badge bg-primary">8,000 points</span>
                 </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 1 → Level 2</h4>
-                        <span class="badge bg-primary">8,000 points</span>
-                    </div>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 150 coins/3h</li>
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> 15% referral bonus</li>
-                    </ul>
-                    <button class="btn btn-primary w-100" onclick="upgradeLevel(2)">Upgrade Now</button>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 150 coins/3h</li>
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> 15% referral bonus</li>
+                </ul>
+                <button class="btn btn-primary w-100" onclick="upgradeLevel(2)">Upgrade Now</button>
+            </div>
+            
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 2 → Level 3</h4>
+                    <span class="badge bg-primary">12,000 points</span>
                 </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h4 class="mb-0"><i class="fas fa-bolt me-2" style="color: #8b5cf6;"></i>Level 2 → Level 3</h4>
-                        <span class="badge bg-primary">12,000 points</span>
-                    </div>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 175 coins/3h</li>
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Daily bonus rewards</li>
-                    </ul>
-                    <button class="btn btn-primary w-100" onclick="upgradeLevel(3)">Upgrade Now</button>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 175 coins/3h</li>
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Daily bonus rewards</li>
+                </ul>
+                <button class="btn btn-primary w-100" onclick="upgradeLevel(3)">Upgrade Now</button>
+            </div>
+            
+            <div class="task-card">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="mb-0"><i class="fas fa-crown me-2" style="color: #8b5cf6;"></i>Level 3 → VIP Level</h4>
+                    <span class="badge bg-primary">15,000 points</span>
                 </div>
-                
-                <div class="task-card">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h4 class="mb-0"><i class="fas fa-crown me-2" style="color: #8b5cf6;"></i>Level 3 → VIP Level</h4>
-                        <span class="badge bg-primary">15,000 points</span>
-                    </div>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 200 coins/3h</li>
-                        <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> 20% referral bonus</li>
-                    </ul>
-                    <button class="btn btn-warning w-100" onclick="upgradeLevel(4)">Upgrade to VIP</button>
-                </div>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> Mining Rate: 200 coins/3h</li>
+                    <li class="list-group-item bg-transparent text-white"><i class="fas fa-check-circle text-success me-2"></i> 20% referral bonus</li>
+                </ul>
+                <button class="btn btn-warning w-100" onclick="upgradeLevel(4)">Upgrade to VIP</button>
             </div>
         </div>
     </div>
@@ -746,6 +817,11 @@
                 case 'telegram_group': points = 300; break;
                 case 'twitter_follow': points = 200; break;
                 case 'share': points = 500; break;
+                case 'youtube_sub': points = 400; break;
+                case 'tiktok_follow': points = 350; break;
+                case 'instagram_follow': points = 350; break;
+                case 'facebook_follow': points = 300; break;
+                case 'linkedin_follow': points = 400; break;
             }
             
             currentUser.points += points;
