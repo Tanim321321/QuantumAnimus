@@ -24,6 +24,7 @@
             background: var(--primary-bg);
             background-attachment: fixed;
             padding-bottom: 70px;
+            overflow-x: hidden;
         }
         
         .page {
@@ -138,10 +139,13 @@
             margin: 15px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
         }
         
         .task-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .progress-bar-custom {
@@ -320,6 +324,59 @@
             font-size: 1.1rem;
             margin-top: 5px;
         }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-status-indicator {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .dot-pending {
+            background-color: var(--pending-color);
+        }
+        
+        .dot-approved {
+            background-color: var(--success-color);
+        }
+        
+        .task-progress {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .task-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--quantum-color), #3b82f6);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .task-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            opacity: 0.2;
+        }
     </style>
 </head>
 <body>
@@ -394,6 +451,21 @@
             <div class="header-logo">
                 <i class="fas fa-tasks logo-icon"></i>
                 <h1>Daily Tasks</h1>
+            </div>
+            
+            <div class="task-header">
+                <div class="task-status-indicator">
+                    <div class="status-dot dot-approved"></div>
+                    <span>Approved: <span id="approvedTasks">0</span> tasks</span>
+                </div>
+                <div class="task-status-indicator">
+                    <div class="status-dot dot-pending"></div>
+                    <span>Pending: <span id="pendingTasks">0</span> tasks</span>
+                </div>
+            </div>
+            
+            <div class="task-progress">
+                <div class="task-progress-bar" id="taskProgress"></div>
             </div>
             
             <!-- Tasks will be dynamically generated here -->
@@ -729,7 +801,6 @@
                 actionClass: 'btn-info',
                 status: 'active'
             }
-            // Share task removed as requested
         ];
         
         function initUser(userId, refCode = null) {
@@ -777,14 +848,25 @@
             const container = document.getElementById('tasksContainer');
             container.innerHTML = '';
             
+            let pendingCount = 0;
+            let approvedCount = 0;
+            let activeCount = 0;
+            
             allTasks.forEach(task => {
                 // Check if task is approved (should be hidden)
                 if (currentUser.tasks[task.id] === 'approved') {
+                    approvedCount++;
                     return;
                 }
                 
                 // Check task status
                 const taskStatus = currentUser.tasks[task.id] || 'active';
+                
+                if (taskStatus === 'pending') {
+                    pendingCount++;
+                } else {
+                    activeCount++;
+                }
                 
                 const taskCard = document.createElement('div');
                 taskCard.className = 'task-card';
@@ -808,6 +890,7 @@
                 </a>`;
                 
                 taskCard.innerHTML = `
+                    <i class="${task.icon} task-icon" style="color: ${task.iconColor}"></i>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h4 class="mb-1"><i class="${task.icon} me-2" style="color: ${task.iconColor};"></i>${task.name}</h4>
@@ -822,6 +905,28 @@
                 
                 container.appendChild(taskCard);
             });
+            
+            // Update task counters
+            document.getElementById('approvedTasks').textContent = approvedCount;
+            document.getElementById('pendingTasks').textContent = pendingCount;
+            
+            // Update progress bar
+            const totalTasks = allTasks.length;
+            const completedTasks = approvedCount;
+            const progress = (completedTasks / totalTasks) * 100;
+            document.getElementById('taskProgress').style.width = `${progress}%`;
+            
+            // If no tasks available to show
+            if (activeCount === 0 && pendingCount === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h4>All tasks completed!</h4>
+                        <p>Great job! You've completed all available tasks.</p>
+                        <p>Check back tomorrow for new tasks.</p>
+                    </div>
+                `;
+            }
         }
         
         // ========================
@@ -834,7 +939,10 @@
             });
             
             // Show selected page
-            document.getElementById(pageId).style.display = 'block';
+            const pageElement = document.getElementById(pageId);
+            if (pageElement) {
+                pageElement.style.display = 'block';
+            }
             
             // Update active nav button
             document.querySelectorAll('.nav-btn').forEach(btn => {
