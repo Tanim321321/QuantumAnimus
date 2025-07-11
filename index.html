@@ -378,7 +378,7 @@
                         <h4 class="mb-1"><i class="fab fa-youtube me-2" style="color: #FF0000;"></i>Subscribe on YouTube</h4>
                         <p class="mb-0 text-muted">Get 400 points for subscribing</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('youtube_sub')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('youtube_sub')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -394,7 +394,7 @@
                         <h4 class="mb-1"><i class="fab fa-tiktok me-2" style="color: #69C9D0;"></i>Follow on TikTok</h4>
                         <p class="mb-0 text-muted">Get 350 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('tiktok_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('tiktok_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -410,7 +410,7 @@
                         <h4 class="mb-1"><i class="fab fa-instagram me-2" style="color: #E1306C;"></i>Follow on Instagram</h4>
                         <p class="mb-0 text-muted">Get 350 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('instagram_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('instagram_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -426,7 +426,7 @@
                         <h4 class="mb-1"><i class="fab fa-facebook me-2" style="color: #1877F2;"></i>Follow on Facebook</h4>
                         <p class="mb-0 text-muted">Get 300 points for following us</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('facebook_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('facebook_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -442,7 +442,7 @@
                         <h4 class="mb-1"><i class="fab fa-linkedin me-2" style="color: #0A66C2;"></i>Follow on LinkedIn</h4>
                         <p class="mb-0 text-muted">Get 400 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('linkedin_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('linkedin_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -458,7 +458,7 @@
                         <h4 class="mb-1"><i class="fab fa-telegram me-2" style="color: #8b5cf6;"></i>Join Telegram Group</h4>
                         <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('telegram_group')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('telegram_group')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -474,7 +474,7 @@
                         <h4 class="mb-1"><i class="fab fa-twitter me-2" style="color: #8b5cf6;"></i>Follow Us on Twitter</h4>
                         <p class="mb-0 text-muted">Get 200 points for following Us</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('twitter_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('twitter_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -490,7 +490,7 @@
                         <h4 class="mb-1"><i class="fas fa-share-alt me-2" style="color: #8b5cf6;"></i>Share Quantum Bot</h4>
                         <p class="mb-0 text-muted">Get 500 points for sharing</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="openModal('share')">
+                    <button class="btn btn-success btn-sm" onclick="openProofModal('share')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -665,13 +665,12 @@
     <!-- Proof Submission Modal -->
     <div id="proofModal" class="modal">
         <div class="modal-content">
-            <h2><i class="fas fa-camera me-2"></i>Submit Proof</h2>
-            <input type="file" id="screenshotInput" accept="image/*" />
-            <textarea id="proofText" placeholder="Enter additional details or your username..." rows="3"></textarea>
+            <h2><i class="fas fa-user-check me-2"></i>Verify Task</h2>
+            <textarea id="proofText" placeholder="Enter your username for verification..." rows="3"></textarea>
             
             <div class="loading-proof" id="loadingProof">
                 <i class="fas fa-circle-notch"></i>
-                <p>Verifying your proof...</p>
+                <p>Verifying your username...</p>
             </div>
             
             <div class="modal-buttons">
@@ -951,30 +950,6 @@
             alert("Referral link copied to clipboard! Share it with your friends.");
         }
         
-        function verifyTask(taskType) {
-            // In a real app, you would verify with Telegram API
-            alert(`Task verification for ${taskType} would happen here with Telegram API`);
-            
-            // Simulate adding points for task completion
-            let points = 0;
-            switch(taskType) {
-                case 'telegram_group': points = 300; break;
-                case 'twitter_follow': points = 200; break;
-                case 'share': points = 500; break;
-                case 'youtube_sub': points = 400; break;
-                case 'tiktok_follow': points = 350; break;
-                case 'instagram_follow': points = 350; break;
-                case 'facebook_follow': points = 300; break;
-                case 'linkedin_follow': points = 400; break;
-            }
-            
-            currentUser.points += points;
-            updateUI();
-            
-            const storageKey = 'quantumUser_' + currentUser.id;
-            localStorage.setItem(storageKey, JSON.stringify(currentUser));
-        }
-        
         function shareApp() {
             // Share the Telegram bot link
             const shareText = `Join the Quantum Mining Bot on Telegram and start earning coins! Use my referral link: https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`;
@@ -1031,87 +1006,59 @@
         // ========================
         // PROOF SUBMISSION MODAL
         // ========================
-        let currentTaskType = null;
-        
-        function openModal(taskType) {
-            currentTaskType = taskType;
+        function openProofModal(taskName) {
+            window.currentTaskType = taskName;
             document.getElementById('proofModal').style.display = 'flex';
         }
         
         function closeModal() {
             document.getElementById('proofModal').style.display = 'none';
-            // Reset inputs
-            document.getElementById('screenshotInput').value = '';
             document.getElementById('proofText').value = '';
             document.getElementById('loadingProof').style.display = 'none';
         }
         
-        async function uploadToImgur(imageFile) {
-            const formData = new FormData();
-            formData.append("image", imageFile);
-
-            const response = await fetch("https://api.imgur.com/3/image", {
-                method: "POST",
-                headers: {
-                    Authorization: "Client-ID 546d2a1c76f9449"
-                },
-                body: formData,
-            });
-
-            const data = await response.json();
-            return data.data.link;
-        }
-
         async function submitProof() {
-            const fileInput = document.getElementById('screenshotInput');
             const proofText = document.getElementById('proofText').value;
-            const screenshotFile = fileInput.files[0];
 
-            if (!screenshotFile && !proofText) {
-                alert("Please upload a screenshot or write something.");
+            if (!proofText) {
+                alert("Please enter your username");
                 return;
             }
 
+            // Show loading
             document.getElementById('loadingProof').style.display = 'block';
+            
+            const taskName = window.currentTaskType || "unknown_task";
+            const userId = currentUser.id;
 
-            let imageUrl = null;
-            if (screenshotFile) {
-                try {
-                    imageUrl = await uploadToImgur(screenshotFile);
-                } catch (error) {
-                    alert("Failed to upload screenshot.");
-                    document.getElementById('loadingProof').style.display = 'none';
-                    return;
+            try {
+                const response = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks", {
+                    method: "POST",
+                    headers: {
+                        apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c",
+                        "Content-Type": "application/json",
+                        Prefer: "return=minimal"
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        task_name: taskName,
+                        proof_text: proofText,
+                        screenshot_url: null,  // no screenshot
+                        status: "pending"
+                    })
+                });
+
+                if (response.ok) {
+                    alert("✅ Proof submitted successfully!");
+                } else {
+                    alert("❌ Error submitting proof.");
+                    console.log(await response.text());
                 }
-            }
-
-            const userId = localStorage.getItem("quantumUserId") || "guest_user";
-            const taskName = currentTaskType || "unknown_task";
-
-            const response = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks", {
-                method: "POST",
-                headers: {
-                    apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c",
-                    "Content-Type": "application/json",
-                    Prefer: "return=minimal"
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    task_name: taskName,
-                    proof_text: proofText,
-                    screenshot_url: imageUrl,
-                    status: "pending"
-                })
-            });
-
-            document.getElementById('loadingProof').style.display = 'none';
-            closeModal();
-
-            if (response.ok) {
-                alert("✅ Proof submitted successfully!");
-            } else {
-                alert("❌ Error submitting proof.");
-                console.log(await response.text());
+            } catch (error) {
+                console.error("Submission error:", error);
+                alert("❌ Network error. Please try again.");
+            } finally {
+                closeModal();
             }
         }
     </script>
