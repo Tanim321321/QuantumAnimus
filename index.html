@@ -170,6 +170,107 @@
             color: var(--quantum-color);
             margin-right: 10px;
         }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .modal h2 i {
+            margin-right: 10px;
+        }
+        
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .modal textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal button {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+        
+        .modal .btn-primary {
+            background: linear-gradient(135deg, var(--quantum-color), #3b82f6);
+            color: white;
+        }
+        
+        .modal .btn-secondary:hover {
+            background: #64748b;
+        }
+        
+        .modal .btn-primary:hover {
+            background: linear-gradient(135deg, #9b79f9, #5a9cff);
+        }
+        
+        /* Loading animation for proof submission */
+        .loading-proof {
+            display: none;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .loading-proof i {
+            color: var(--quantum-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -253,7 +354,7 @@
                         <h4 class="mb-1"><i class="fab fa-youtube me-2" style="color: #FF0000;"></i>Subscribe on YouTube</h4>
                         <p class="mb-0 text-muted">Get 400 points for subscribing</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('youtube_sub')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('youtube_sub')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -269,7 +370,7 @@
                         <h4 class="mb-1"><i class="fab fa-tiktok me-2" style="color: #69C9D0;"></i>Follow on TikTok</h4>
                         <p class="mb-0 text-muted">Get 350 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('tiktok_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('tiktok_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -285,7 +386,7 @@
                         <h4 class="mb-1"><i class="fab fa-instagram me-2" style="color: #E1306C;"></i>Follow on Instagram</h4>
                         <p class="mb-0 text-muted">Get 350 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('instagram_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('instagram_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -301,7 +402,7 @@
                         <h4 class="mb-1"><i class="fab fa-facebook me-2" style="color: #1877F2;"></i>Follow on Facebook</h4>
                         <p class="mb-0 text-muted">Get 300 points for following us</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('facebook_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('facebook_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -317,7 +418,7 @@
                         <h4 class="mb-1"><i class="fab fa-linkedin me-2" style="color: #0A66C2;"></i>Follow on LinkedIn</h4>
                         <p class="mb-0 text-muted">Get 400 points for following</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('linkedin_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('linkedin_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -333,7 +434,7 @@
                         <h4 class="mb-1"><i class="fab fa-telegram me-2" style="color: #8b5cf6;"></i>Join Telegram Group</h4>
                         <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('telegram_group')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('telegram_group')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -349,7 +450,7 @@
                         <h4 class="mb-1"><i class="fab fa-twitter me-2" style="color: #8b5cf6;"></i>Follow Us on Twitter</h4>
                         <p class="mb-0 text-muted">Get 200 points for following Us</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('twitter_follow')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('twitter_follow')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -365,7 +466,7 @@
                         <h4 class="mb-1"><i class="fas fa-share-alt me-2" style="color: #8b5cf6;"></i>Share Quantum Bot</h4>
                         <p class="mb-0 text-muted">Get 500 points for sharing</p>
                     </div>
-                    <button class="btn btn-success btn-sm" onclick="verifyTask('share')">
+                    <button class="btn btn-success btn-sm" onclick="openModal('share')">
                         <i class="fas fa-check me-1"></i> Verify
                     </button>
                 </div>
@@ -533,6 +634,25 @@
                     <i class="fas fa-level-up-alt"></i>
                     <span>Upgrade</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proof Submission Modal -->
+    <div id="proofModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-camera me-2"></i>Submit Proof</h2>
+            <input type="file" id="screenshotInput" accept="image/*" />
+            <textarea id="proofText" placeholder="Enter additional details or your username..." rows="3"></textarea>
+            
+            <div class="loading-proof" id="loadingProof">
+                <i class="fas fa-circle-notch"></i>
+                <p>Verifying your proof...</p>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitProof()">Submit Proof</button>
             </div>
         </div>
     </div>
@@ -882,6 +1002,52 @@
         
         function generateReferralCode() {
             return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+        
+        // ========================
+        // PROOF SUBMISSION MODAL
+        // ========================
+        let currentTaskType = null;
+        
+        function openModal(taskType) {
+            currentTaskType = taskType;
+            document.getElementById('proofModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('proofModal').style.display = 'none';
+            // Reset inputs
+            document.getElementById('screenshotInput').value = '';
+            document.getElementById('proofText').value = '';
+            document.getElementById('loadingProof').style.display = 'none';
+        }
+        
+        function submitProof() {
+            const fileInput = document.getElementById('screenshotInput');
+            const proofText = document.getElementById('proofText').value;
+            
+            if (!fileInput.files.length && !proofText) {
+                alert("Please provide either a screenshot or text proof!");
+                return;
+            }
+            
+            // Show loading animation
+            document.getElementById('loadingProof').style.display = 'block';
+            
+            // Simulate server verification
+            setTimeout(() => {
+                // Hide loading animation
+                document.getElementById('loadingProof').style.display = 'none';
+                
+                // Close the modal
+                closeModal();
+                
+                // Verify the task
+                verifyTask(currentTaskType);
+                
+                // Show success message
+                alert("Proof submitted successfully! Points have been added to your account.");
+            }, 2000);
         }
     </script>
 </body>
