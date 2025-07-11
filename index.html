@@ -313,6 +313,13 @@
         .status-verified {
             background-color: var(--success-color);
         }
+        
+        .task-points {
+            color: #38bdf8;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -721,19 +728,8 @@
                 actionText: 'Follow',
                 actionClass: 'btn-info',
                 status: 'active'
-            },
-            {
-                id: 'share',
-                name: 'Share Quantum Bot',
-                icon: 'fas fa-share-alt',
-                iconColor: '#8b5cf6',
-                points: 100,
-                actionUrl: '#',
-                actionText: 'Share Bot Now',
-                actionClass: 'btn-warning',
-                status: 'active',
-                onClick: 'shareApp()'
             }
+            // Share task removed as requested
         ];
         
         function initUser(userId, refCode = null) {
@@ -807,23 +803,15 @@
                     </button>`;
                 }
                 
-                // Special button for share task
-                let actionButton = '';
-                if (task.onClick) {
-                    actionButton = `<button class="btn ${task.actionClass} btn-sm w-100 mt-2" onclick="${task.onClick}">
-                        <i class="${task.icon} me-1"></i> ${task.actionText}
-                    </button>`;
-                } else {
-                    actionButton = `<a href="${task.actionUrl}" target="_blank" class="btn ${task.actionClass} btn-sm w-100 mt-2">
-                        <i class="${task.icon} me-1"></i> ${task.actionText}
-                    </a>`;
-                }
+                let actionButton = `<a href="${task.actionUrl}" target="_blank" class="btn ${task.actionClass} btn-sm w-100 mt-2">
+                    <i class="${task.icon} me-1"></i> ${task.actionText}
+                </a>`;
                 
                 taskCard.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h4 class="mb-1"><i class="${task.icon} me-2" style="color: ${task.iconColor};"></i>${task.name}</h4>
-                            <p class="mb-0 text-muted">Get ${task.points} points ${statusBadge}</p>
+                            <p class="mb-0">Get <span class="task-points">${task.points} points</span> ${statusBadge}</p>
                         </div>
                         <div>
                             ${verifyBtn}
@@ -1006,59 +994,6 @@
             alert("Referral link copied to clipboard! Share it with your friends.");
         }
         
-        function shareApp() {
-            // Share the Telegram bot link
-            const shareText = `Join the Quantum Mining Bot on Telegram and start earning coins! Use my referral link: https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Quantum Mining Bot',
-                    text: 'Join this awesome mining bot on Telegram!',
-                    url: `https://t.me/quantum_animous_bot?start=${currentUser.referral_code}`
-                })
-                .then(() => console.log('Successful share'))
-                .catch(error => console.log('Error sharing:', error));
-            } else {
-                // Fallback for desktop
-                alert(`Share this link: ${shareText}`);
-            }
-        }
-        
-        function loadLeaderboard() {
-            // Simulate loading leaderboard data
-            setTimeout(() => {
-                const leaderboardBody = document.getElementById('leaderboardBody');
-                
-                // Clear existing rows except the first one (which is the current user)
-                while (leaderboardBody.children.length > 1) {
-                    leaderboardBody.removeChild(leaderboardBody.lastChild);
-                }
-                
-                // Add some dummy data
-                for (let i = 2; i <= 10; i++) {
-                    const referrals = Math.floor(Math.random() * 20);
-                    const earnings = Math.floor(referrals * 50);
-                    
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${i}</td>
-                        <td>QuantumUser${Math.floor(Math.random() * 1000)}</td>
-                        <td>${referrals}</td>
-                        <td>${earnings.toLocaleString()}</td>
-                    `;
-                    leaderboardBody.appendChild(row);
-                }
-                
-                // Update current user's row
-                document.getElementById('yourReferrals').textContent = currentUser.referrals;
-                document.getElementById('yourEarnings').textContent = (currentUser.referrals * 50).toLocaleString();
-            }, 1000);
-        }
-        
-        function generateReferralCode() {
-            return Math.random().toString(36).substr(2, 8).toUpperCase();
-        }
-        
         // ========================
         // PROOF SUBMISSION MODAL
         // ========================
@@ -1160,8 +1095,40 @@
             alert(`✅ Task approved! ${task.points} points added to your balance.`);
         }
         
-        // For testing: Add this to browser console
-        // approveTask('youtube');
+        function loadLeaderboard() {
+            // Simulate loading leaderboard data
+            setTimeout(() => {
+                const leaderboardBody = document.getElementById('leaderboardBody');
+                
+                // Clear existing rows except the first one (which is the current user)
+                while (leaderboardBody.children.length > 1) {
+                    leaderboardBody.removeChild(leaderboardBody.lastChild);
+                }
+                
+                // Add some dummy data
+                for (let i = 2; i <= 10; i++) {
+                    const referrals = Math.floor(Math.random() * 20);
+                    const earnings = Math.floor(referrals * 50);
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${i}</td>
+                        <td>QuantumUser${Math.floor(Math.random() * 1000)}</td>
+                        <td>${referrals}</td>
+                        <td>${earnings.toLocaleString()}</td>
+                    `;
+                    leaderboardBody.appendChild(row);
+                }
+                
+                // Update current user's row
+                document.getElementById('yourReferrals').textContent = currentUser.referrals;
+                document.getElementById('yourEarnings').textContent = (currentUser.referrals * 50).toLocaleString();
+            }, 1000);
+        }
+        
+        function generateReferralCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
     </script>
 </body>
 </html>
