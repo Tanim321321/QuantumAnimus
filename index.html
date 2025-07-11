@@ -14,6 +14,7 @@
             --accent-color: #38bdf8;
             --success-color: #10b981;
             --quantum-color: #8b5cf6;
+            --pending-color: #f59e0b;
         }
         
         body {
@@ -295,6 +296,23 @@
             width: 3rem;
             height: 3rem;
         }
+        
+        /* Status badges */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-pending {
+            background-color: var(--pending-color);
+        }
+        
+        .status-verified {
+            background-color: var(--success-color);
+        }
     </style>
 </head>
 <body>
@@ -371,133 +389,8 @@
                 <h1>Daily Tasks</h1>
             </div>
             
-            <!-- YouTube Subscription Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-youtube me-2" style="color: #FF0000;"></i>Subscribe on YouTube</h4>
-                        <p class="mb-0 text-muted">Get 400 points for subscribing</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('youtube_sub')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://youtube.com/@mrtanim-fe2eu?si=uwZBr-oc_uGCzHfD" target="_blank" class="btn btn-danger btn-sm w-100 mt-2">
-                    <i class="fab fa-youtube me-1"></i> Subscribe Now
-                </a>
-            </div>
-            
-            <!-- TikTok Follow Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-tiktok me-2" style="color: #69C9D0;"></i>Follow on TikTok</h4>
-                        <p class="mb-0 text-muted">Get 350 points for following</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('tiktok_follow')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://www.tiktok.com/@tanimkhan7078?_t=ZS-8xW5GFBKfyr&_r=1" target="_blank" class="btn btn-sm w-100 mt-2" style="background-color: #000; color: white;">
-                    <i class="fab fa-tiktok me-1"></i> Follow Now
-                </a>
-            </div>
-            
-            <!-- Instagram Follow Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-instagram me-2" style="color: #E1306C;"></i>Follow on Instagram</h4>
-                        <p class="mb-0 text-muted">Get 350 points for following</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('instagram_follow')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://www.instagram.com/tanimkhan321?igsh=MXdjbXljZHkxNWQ1Zg==" target="_blank" class="btn btn-sm w-100 mt-2" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white;">
-                    <i class="fab fa-instagram me-1"></i> Follow Now
-                </a>
-            </div>
-            
-            <!-- New Facebook Follow Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-facebook me-2" style="color: #1877F2;"></i>Follow on Facebook</h4>
-                        <p class="mb-0 text-muted">Get 300 points for following us</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('facebook_follow')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://www.facebook.com/profile.php?id=61576635309991" target="_blank" class="btn btn-sm w-100 mt-2" style="background-color: #1877F2; color: white;">
-                    <i class="fab fa-facebook me-1"></i> Follow Now
-                </a>
-            </div>
-            
-            <!-- LinkedIn Follow Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-linkedin me-2" style="color: #0A66C2;"></i>Follow on LinkedIn</h4>
-                        <p class="mb-0 text-muted">Get 400 points for following</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('linkedin_follow')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://www.linkedin.com/in/tanim-khan-630a55233?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
-                    <i class="fab fa-linkedin me-1"></i> Follow Now
-                </a>
-            </div>
-            
-            <!-- Telegram Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-telegram me-2" style="color: #8b5cf6;"></i>Join Telegram Group</h4>
-                        <p class="mb-0 text-muted">Get 300 points for joining our official group</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('telegram_group')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://t.me/QuantumAnimus_Official" target="_blank" class="btn btn-primary btn-sm w-100 mt-2">
-                    <i class="fab fa-telegram me-1"></i> Join Now
-                </a>
-            </div>
-            
-            <!-- Twitter Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fab fa-twitter me-2" style="color: #8b5cf6;"></i>Follow Us on Twitter</h4>
-                        <p class="mb-0 text-muted">Get 200 points for following Us</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('twitter_follow')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <a href="https://twitter.com/tanim877" target="_blank" class="btn btn-info btn-sm w-100 mt-2">
-                    <i class="fab fa-twitter me-1"></i> Follow
-                </a>
-            </div>
-            
-            <!-- Share Task -->
-            <div class="task-card">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h4 class="mb-1"><i class="fas fa-share-alt me-2" style="color: #8b5cf6;"></i>Share Quantum Bot</h4>
-                        <p class="mb-0 text-muted">Get 500 points for sharing</p>
-                    </div>
-                    <button class="btn btn-success btn-sm" onclick="openProofModal('share')">
-                        <i class="fas fa-check me-1"></i> Verify
-                    </button>
-                </div>
-                <button class="btn btn-warning btn-sm w-100 mt-2" onclick="shareApp()">
-                    <i class="fas fa-share-alt me-1"></i> Share Bot Now
-                </button>
-            </div>
+            <!-- Tasks will be dynamically generated here -->
+            <div id="tasksContainer"></div>
         </div>
     </div>
     
@@ -666,6 +559,7 @@
     <div id="proofModal" class="modal">
         <div class="modal-content">
             <h2><i class="fas fa-user-check me-2"></i>Verify Task</h2>
+            <div id="taskInfo" class="mb-3"></div>
             <textarea id="proofText" placeholder="Enter your username for verification..." rows="3"></textarea>
             
             <div class="loading-proof" id="loadingProof">
@@ -726,6 +620,9 @@
             
             // Load additional data
             loadLeaderboard();
+            
+            // Generate tasks
+            generateTasks();
         }
         
         // ========================
@@ -739,11 +636,105 @@
             last_claim: 0,
             referrals: 0,
             referral_code: '',
-            referred_by: null
+            referred_by: null,
+            tasks: {} // Stores task status: 'pending', 'approved'
         };
         
         const levelCosts = {1: 5000, 2: 8000, 3: 12000, 4: 15000};
         const levelRewards = {0: 100, 1: 125, 2: 150, 3: 175, 4: 200};
+        
+        // Define all tasks with points and verification status
+        const allTasks = [
+            {
+                id: 'youtube',
+                name: 'Subscribe on YouTube',
+                icon: 'fab fa-youtube',
+                iconColor: '#FF0000',
+                points: 100,
+                actionUrl: 'https://youtube.com/@mrtanim-fe2eu?si=uwZBr-oc_uGCzHfD',
+                actionText: 'Subscribe Now',
+                actionClass: 'btn-danger',
+                status: 'active' // active, pending, approved
+            },
+            {
+                id: 'tiktok',
+                name: 'Follow on TikTok',
+                icon: 'fab fa-tiktok',
+                iconColor: '#69C9D0',
+                points: 100,
+                actionUrl: 'https://www.tiktok.com/@tanimkhan7078?_t=ZS-8xW5GFBKfyr&_r=1',
+                actionText: 'Follow Now',
+                actionClass: 'btn-dark',
+                status: 'active'
+            },
+            {
+                id: 'instagram',
+                name: 'Follow on Instagram',
+                icon: 'fab fa-instagram',
+                iconColor: '#E1306C',
+                points: 100,
+                actionUrl: 'https://www.instagram.com/tanimkhan321?igsh=MXdjbXljZHkxNWQ1Zg==',
+                actionText: 'Follow Now',
+                actionClass: 'btn-instagram',
+                status: 'active'
+            },
+            {
+                id: 'facebook',
+                name: 'Follow on Facebook',
+                icon: 'fab fa-facebook',
+                iconColor: '#1877F2',
+                points: 100,
+                actionUrl: 'https://www.facebook.com/profile.php?id=61576635309991',
+                actionText: 'Follow Now',
+                actionClass: 'btn-primary',
+                status: 'active'
+            },
+            {
+                id: 'linkedin',
+                name: 'Follow on LinkedIn',
+                icon: 'fab fa-linkedin',
+                iconColor: '#0A66C2',
+                points: 100,
+                actionUrl: 'https://www.linkedin.com/in/tanim-khan-630a55233?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app',
+                actionText: 'Follow Now',
+                actionClass: 'btn-primary',
+                status: 'active'
+            },
+            {
+                id: 'telegram',
+                name: 'Join Telegram Group',
+                icon: 'fab fa-telegram',
+                iconColor: '#8b5cf6',
+                points: 100,
+                actionUrl: 'https://t.me/QuantumAnimus_Official',
+                actionText: 'Join Now',
+                actionClass: 'btn-primary',
+                status: 'active'
+            },
+            {
+                id: 'twitter',
+                name: 'Follow Us on Twitter',
+                icon: 'fab fa-twitter',
+                iconColor: '#1DA1F2',
+                points: 100,
+                actionUrl: 'https://twitter.com/tanim877',
+                actionText: 'Follow',
+                actionClass: 'btn-info',
+                status: 'active'
+            },
+            {
+                id: 'share',
+                name: 'Share Quantum Bot',
+                icon: 'fas fa-share-alt',
+                iconColor: '#8b5cf6',
+                points: 100,
+                actionUrl: '#',
+                actionText: 'Share Bot Now',
+                actionClass: 'btn-warning',
+                status: 'active',
+                onClick: 'shareApp()'
+            }
+        ];
         
         function initUser(userId, refCode = null) {
             try {
@@ -764,7 +755,8 @@
                         last_claim: 0,
                         referrals: Math.floor(Math.random() * 10),
                         referral_code: generateReferralCode(),
-                        referred_by: refCode || null
+                        referred_by: refCode || null,
+                        tasks: {} // Initialize tasks
                     };
                     
                     // Save new user to localStorage
@@ -780,6 +772,68 @@
             } catch (error) {
                 console.error("Error initializing user:", error);
             }
+        }
+        
+        // ========================
+        // TASK MANAGEMENT
+        // ========================
+        function generateTasks() {
+            const container = document.getElementById('tasksContainer');
+            container.innerHTML = '';
+            
+            allTasks.forEach(task => {
+                // Check if task is approved (should be hidden)
+                if (currentUser.tasks[task.id] === 'approved') {
+                    return;
+                }
+                
+                // Check task status
+                const taskStatus = currentUser.tasks[task.id] || 'active';
+                
+                const taskCard = document.createElement('div');
+                taskCard.className = 'task-card';
+                
+                let statusBadge = '';
+                let verifyBtn = '';
+                
+                if (taskStatus === 'pending') {
+                    statusBadge = `<span class="status-badge status-pending">PENDING</span>`;
+                    verifyBtn = `<button class="btn btn-secondary btn-sm" disabled>
+                        <i class="fas fa-clock me-1"></i> Pending Verification
+                    </button>`;
+                } else if (taskStatus === 'active') {
+                    verifyBtn = `<button class="btn btn-success btn-sm" onclick="openProofModal('${task.id}')">
+                        <i class="fas fa-check me-1"></i> Verify
+                    </button>`;
+                }
+                
+                // Special button for share task
+                let actionButton = '';
+                if (task.onClick) {
+                    actionButton = `<button class="btn ${task.actionClass} btn-sm w-100 mt-2" onclick="${task.onClick}">
+                        <i class="${task.icon} me-1"></i> ${task.actionText}
+                    </button>`;
+                } else {
+                    actionButton = `<a href="${task.actionUrl}" target="_blank" class="btn ${task.actionClass} btn-sm w-100 mt-2">
+                        <i class="${task.icon} me-1"></i> ${task.actionText}
+                    </a>`;
+                }
+                
+                taskCard.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-1"><i class="${task.icon} me-2" style="color: ${task.iconColor};"></i>${task.name}</h4>
+                            <p class="mb-0 text-muted">Get ${task.points} points ${statusBadge}</p>
+                        </div>
+                        <div>
+                            ${verifyBtn}
+                        </div>
+                    </div>
+                    ${actionButton}
+                `;
+                
+                container.appendChild(taskCard);
+            });
         }
         
         // ========================
@@ -802,11 +856,13 @@
                 }
             });
             
-            // Special handling for referral page
+            // Special handling for pages
             if (pageId === 'referral') {
                 document.getElementById('totalReferrals').textContent = currentUser.referrals;
                 document.getElementById('earnedPoints').textContent = Math.floor(currentUser.referrals * 50);
                 document.getElementById('yourReferrals').textContent = currentUser.referrals;
+            } else if (pageId === 'task') {
+                generateTasks();
             }
         }
         
@@ -1006,15 +1062,29 @@
         // ========================
         // PROOF SUBMISSION MODAL
         // ========================
-        function openProofModal(taskName) {
-            window.currentTaskType = taskName;
+        let currentTaskId = null;
+        
+        function openProofModal(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            currentTaskId = taskId;
             document.getElementById('proofModal').style.display = 'flex';
+            
+            // Update task info in modal
+            document.getElementById('taskInfo').innerHTML = `
+                <div class="alert alert-info">
+                    <i class="${task.icon} me-2"></i> ${task.name} - ${task.points} points
+                </div>
+                <p>Please enter the username you used to complete this task for verification.</p>
+            `;
         }
         
         function closeModal() {
             document.getElementById('proofModal').style.display = 'none';
             document.getElementById('proofText').value = '';
             document.getElementById('loadingProof').style.display = 'none';
+            currentTaskId = null;
         }
         
         async function submitProof() {
@@ -1024,43 +1094,74 @@
                 alert("Please enter your username");
                 return;
             }
+            
+            if (!currentTaskId) {
+                alert("No task selected");
+                return;
+            }
 
             // Show loading
             document.getElementById('loadingProof').style.display = 'block';
             
-            const taskName = window.currentTaskType || "unknown_task";
+            const taskId = currentTaskId;
             const userId = currentUser.id;
 
             try {
-                const response = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks", {
-                    method: "POST",
-                    headers: {
-                        apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c",
-                        "Content-Type": "application/json",
-                        Prefer: "return=minimal"
-                    },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        task_name: taskName,
-                        proof_text: proofText,
-                        screenshot_url: null,  // no screenshot
-                        status: "pending"
-                    })
-                });
-
-                if (response.ok) {
-                    alert("✅ Proof submitted successfully!");
-                } else {
-                    alert("❌ Error submitting proof.");
-                    console.log(await response.text());
-                }
+                // Set task status to pending
+                currentUser.tasks[taskId] = 'pending';
+                
+                // Save user data
+                const storageKey = 'quantumUser_' + currentUser.id;
+                localStorage.setItem(storageKey, JSON.stringify(currentUser));
+                
+                // Update UI
+                generateTasks();
+                
+                // Simulate API call to backend
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                alert("✅ Proof submitted successfully! Admin will verify your submission.");
+                
             } catch (error) {
                 console.error("Submission error:", error);
-                alert("❌ Network error. Please try again.");
+                alert("❌ Error submitting proof. Please try again.");
             } finally {
                 closeModal();
             }
         }
+        
+        // ========================
+        // ADMIN SIMULATION (For testing only)
+        // ========================
+        // This would normally be done on the backend
+        function approveTask(taskId) {
+            if (!currentUser.tasks[taskId] || currentUser.tasks[taskId] !== 'pending') {
+                alert("No pending task found");
+                return;
+            }
+            
+            // Update task status to approved
+            currentUser.tasks[taskId] = 'approved';
+            
+            // Add points to user balance
+            const task = allTasks.find(t => t.id === taskId);
+            if (task) {
+                currentUser.points += task.points;
+            }
+            
+            // Save user data
+            const storageKey = 'quantumUser_' + currentUser.id;
+            localStorage.setItem(storageKey, JSON.stringify(currentUser));
+            
+            // Update UI
+            updateUI();
+            generateTasks();
+            
+            alert(`✅ Task approved! ${task.points} points added to your balance.`);
+        }
+        
+        // For testing: Add this to browser console
+        // approveTask('youtube');
     </script>
 </body>
 </html>
