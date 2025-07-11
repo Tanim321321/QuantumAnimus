@@ -657,74 +657,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-async function uploadToImgur(imageFile) {
-  const formData = new FormData();
-  formData.append("image", imageFile);
-
-  const response = await fetch("https://api.imgur.com/3/image", {
-    method: "POST",
-    headers: {
-      Authorization: "Client-ID 546d2a1c76f9449",
-    },
-    body: formData,
-  });
-
-  const data = await response.json();
-  return data.data.link;
-}
-
-async function submitProof() {
-  const fileInput = document.getElementById('screenshotInput');
-  const proofText = document.getElementById('proofText').value;
-  const screenshotFile = fileInput.files[0];
-
-  if (!screenshotFile && !proofText) {
-    alert("Please upload a screenshot or write something.");
-    return;
-  }
-
-  document.getElementById('loadingProof').style.display = 'block';
-
-  let imageUrl = null;
-  if (screenshotFile) {
-    try {
-      imageUrl = await uploadToImgur(screenshotFile);
-    } catch (error) {
-      alert("Failed to upload screenshot.");
-      document.getElementById('loadingProof').style.display = 'none';
-      return;
-    }
-  }
-
-  const response = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks", {
-    method: "POST",
-    headers: {
-      apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c",
-      "Content-Type": "application/json",
-      Prefer: "return=minimal"
-    },
-    body: JSON.stringify({
-      user_id: currentUser.id,
-      task_name: currentTaskType,
-      proof_text: proofText,
-      screenshot_url: imageUrl,
-      status: "pending"
-    })
-  });
-
-  document.getElementById('loadingProof').style.display = 'none';
-  closeModal();
-
-  if (response.ok) {
-    alert("✅ Proof submitted successfully! Admin will review it soon.");
-  } else {
-    alert("❌ Error submitting to database.");
-    console.log(await response.text());
-  }
-}
-
-</script>
+    
     <script>
         // ========================
         // APP INITIALIZATION
@@ -1176,5 +1109,90 @@ async function submitProof() {
 }
 
 </script>
+
+<!-- ✅ Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ✅ Proof Submission Script -->
+<script>
+function openProofModal(taskName) {
+  window.currentTaskType = taskName;
+  document.getElementById('proofModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('proofModal').style.display = 'none';
+}
+
+async function uploadToImgur(imageFile) {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  const response = await fetch("https://api.imgur.com/3/image", {
+    method: "POST",
+    headers: {
+      Authorization: "Client-ID 546d2a1c76f9449"
+    },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return data.data.link;
+}
+
+async function submitProof() {
+  const fileInput = document.getElementById('screenshotInput');
+  const proofText = document.getElementById('proofText').value;
+  const screenshotFile = fileInput.files[0];
+
+  if (!screenshotFile && !proofText) {
+    alert("Please upload a screenshot or write something.");
+    return;
+  }
+
+  document.getElementById('loadingProof').style.display = 'block';
+
+  let imageUrl = null;
+  if (screenshotFile) {
+    try {
+      imageUrl = await uploadToImgur(screenshotFile);
+    } catch (error) {
+      alert("Failed to upload screenshot.");
+      document.getElementById('loadingProof').style.display = 'none';
+      return;
+    }
+  }
+
+  const userId = localStorage.getItem("quantumUserId") || "guest_user";
+  const taskName = window.currentTaskType || "unknown_task";
+
+  const response = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks", {
+    method: "POST",
+    headers: {
+      apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImliamlndmZicWRleW9ydGJjdHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzOTM4MjgsImV4cCI6MjA2NTk2OTgyOH0.qE24RJCJrMJXcggy_f-6a2_fb5g-GhSOie-_Y2nE82c",
+      "Content-Type": "application/json",
+      Prefer: "return=minimal"
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      task_name: taskName,
+      proof_text: proofText,
+      screenshot_url: imageUrl,
+      status: "pending"
+    })
+  });
+
+  document.getElementById('loadingProof').style.display = 'none';
+  closeModal();
+
+  if (response.ok) {
+    alert("✅ Proof submitted successfully!");
+  } else {
+    alert("❌ Error submitting proof.");
+    console.log(await response.text());
+  }
+}
+</script>
+
 </body>
 </html>
