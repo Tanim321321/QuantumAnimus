@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content=device-width, initial-scale=1.0 />
+  <title>Qerion Admin Panel</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f4; }
+    h1 { text-align: center; }
+    .login-section, .panel-section { max-width: 700px; margin: auto; }
+    .proof { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 0 5px #ccc; }
+    button { padding: 8px 12px; margin: 5px 5px 5px 0; }
+    .hidden { display: none; }
+    input[type="password"], input[type="text"], select {
+      width: 100%; padding: 10px; margin: 10px 0;
+    }
+    #controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+    #proofList { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Qerion Admin Panel 🔐</h1>
+
+  <div class="login-section" id="loginSection">
+    <h3>Enter Admin Password</h3>
+    <input type="password" id="adminPassword" placeholder="Enter password..." />
+    <button onclick="checkPassword()">Login</button>
+    <p id="loginError" style="color:red;"></p>
+  </div>
+
+  <div class="panel-section hidden" id="adminPanel">
+    <div id="controls">
+      <select id="statusFilter" onchange="loadProofs()">
+        <option value="pending">Show: Pending</option>
+        <option value="approved">Show: Approved</option>
+        <option value="rejected">Show: Rejected</option>
+        <option value="all">Show: All</option>
+      </select>
+      <input type="text" id="searchBox" placeholder="Search user ID or username" oninput="loadProofs()" />
+    </div>
+    <div id="proofList">Loading...</div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "qerionadmin987";
+    let allProofs = [];
+
+    function checkPassword() {
+      const input = document.getElementById("adminPassword").value;
+      if (input === ADMIN_PASSWORD) {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        fetchProofs();
+      } else {
+        document.getElementById("loginError").innerText = "Incorrect password!";
+      }
+    }
+
+    async function fetchProofs() {
+      const res = await fetch("https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks?select=*", {
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+      });
+      allProofs = await res.json();
+      loadProofs();
+    }
+
+    function loadProofs() {
+      const status = document.getElementById("statusFilter").value;
+      const search = document.getElementById("searchBox").value.toLowerCase();
+      const container = document.getElementById("proofList");
+      container.innerHTML = "";
+
+      let filtered = allProofs;
+      if (status !== "all") {
+        filtered = filtered.filter(p => p.status === status);
+      }
+      if (search) {
+        filtered = filtered.filter(p =>
+          p.user_id.toLowerCase().includes(search) ||
+          (p.proof_text && p.proof_text.toLowerCase().includes(search))
+        );
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p>❗ No matching proofs found.</p>";
+        return;
+      }
+
+      filtered.forEach(d => {
+        const div = document.createElement("div");
+        div.className = "proof";
+        div.innerHTML = `
+          <p><b>User ID:</b> ${d.user_id}</p>
+          <p><b>Task:</b> ${d.task_name}</p>
+          <p><b>Proof:</b> ${d.proof_text || 'N/A'}</p>
+          <p><b>Status:</b> ${d.status}</p>
+          ${d.status === "pending" ? `
+            <button onclick="updateStatus('${d.id}', 'approved')">✅ Approve</button>
+            <button onclick="updateStatus('${d.id}', 'rejected')">❌ Reject</button>
+          ` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function updateStatus(id, newStatus) {
+      await fetch(`https://ibjigvfbqdeyortbctra.supabase.co/rest/v1/tasks?id=eq.${id}`, {
+        method: "PATCH",
+        headers: {
+          apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "Content-Type": "application/json",
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      fetchProofs();
+    }
+  </script>
+</body>
+</html>
